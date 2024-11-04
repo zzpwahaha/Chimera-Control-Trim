@@ -141,6 +141,22 @@ void MessageConsumer::consume()
                 }, Qt::BlockingQueuedConnection);
             connection->do_write(compileReply("Finished setting OL", status));
         }
+        else if (stratWith(message, "Start-MAKO")) {
+            auto args = getArguments(message, 1, argValid, connection);
+            if (!argValid) continue;
+            QMetaObject::invokeMethod(&modulator_, [&]() {
+                modulator_.startMako(qstr(args[0]), status);
+                }, Qt::BlockingQueuedConnection);
+            connection->do_write(compileReply("Finished starting MAKO", status));
+        }
+        else if (stratWith(message, "Stop-MAKO")) {
+            auto args = getArguments(message, 1, argValid, connection);
+            if (!argValid) continue;
+            QMetaObject::invokeMethod(&modulator_, [&]() {
+                modulator_.stopMako(qstr(args[0]), status);
+                }, Qt::BlockingQueuedConnection);
+            connection->do_write(compileReply("Finished starting MAKO", status));
+        }
         else if (stratWith(message, "Get-MAKO-Image")) {
             auto args = getArguments(message, 1, argValid, connection);
             if (!argValid) continue;
@@ -178,12 +194,25 @@ void MessageConsumer::consume()
             connection->do_write(compileReply("Finished setting MAKO feature value", status));
         }
         else if (stratWith(message, "Set-PicoScrew-Position")) {
-            auto args = getArguments(message, 2, argValid, connection);
+            auto args = getArguments(message, 3, argValid, connection);
             if (!argValid) continue;
             QMetaObject::invokeMethod(&modulator_, [&]() {
-                modulator_.setPicoScrewPosition(qstr(args[0]), qstr(args[1]), status);
+                modulator_.setPicoScrewPosition(qstr(args[0]), qstr(args[1]), qstr(args[2]), status);
                 }, Qt::BlockingQueuedConnection);
             connection->do_write(compileReply("Finished setting PicoScrew position", status));
+        }
+        else if (stratWith(message, "Get-PicoScrew-Positions")) {
+            QVector<char> positionValue;
+            QMetaObject::invokeMethod(&modulator_, [&]() {
+                modulator_.getPicoScrewPositions(positionValue, status);
+                }, Qt::BlockingQueuedConnection);
+            connection->do_write(compileReply("Finished getting PicoScrew position", positionValue.toStdVector(), status));
+        }
+        else if (stratWith(message, "Set-PicoScrew-Homes")) {
+            QMetaObject::invokeMethod(&modulator_, [&]() {
+                modulator_.setPicoScrewHomes(status);
+                }, Qt::BlockingQueuedConnection);
+            connection->do_write(compileReply("Finished setting Home for all screws", status));
         }
         else {
             emit logMessage(qstr(timeStamp + ": \t" + "Unrecongnized command: " + message));

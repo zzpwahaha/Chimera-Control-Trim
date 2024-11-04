@@ -34,7 +34,8 @@ class TCPClient:
         else:
             print("Not connected to server.")
 
-    def read(self, bufsize: int = 4096) -> bytes:
+    def read_lite(self, bufsize: int = 4096) -> bytes:
+        self.sock.settimeout(10)  # Set the timeout in seconds
         if self.sock:
             try:
                 data = self.sock.recv(bufsize)
@@ -53,6 +54,36 @@ class TCPClient:
         else:
             print("Not connected to server.")
             return ""
+
+    def read_heavy(self, bufsize: int = 4096, timeout=0.5) -> bytes:
+        self.sock.settimeout(timeout)  # Set the timeout in seconds
+        data = b""
+        if self.sock:
+            try:
+                # data = self.sock.recv(bufsize)
+                # # return data.decode('utf-8')
+                # return data
+                while True:
+                    part = self.sock.recv(bufsize)  # Receive data in chunks
+                    if not part:
+                        break
+                    data += part
+            except socket.timeout:
+                print("Receiving data timed out.")
+            except Exception as e:
+                print(f"An error occurred: {e}")
+            finally:
+                self.sock.settimeout(None)  # Reset timeout to default
+            return data
+        else:
+            print("Not connected to server.")
+            return ""
+
+    def read(self, bufsize: int = 4096, timeout=0.5) -> bytes:
+        if bufsize<=65536:
+            return self.read_lite(bufsize)
+        else:
+            return self.read_heavy(bufsize, timeout)
 
     def query(self, message: Union[str, bytes], bufsize: int = 4096) -> bytes:
         if self.sock:

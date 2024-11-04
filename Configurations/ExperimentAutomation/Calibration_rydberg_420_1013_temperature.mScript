@@ -55,21 +55,21 @@ dac: MW_IQ_Q 0
 pulseon: MWTrg 0.4
 t += 1
 
-dacramp: TweezerIntensity twz_intensity twz_intensity*0.1 10
+dacramp: TweezerIntensity twz_intensity twz_intensity*0.1 0.06
 t += 10
 
-t += -10
-on: Ryd420Trg
-t += 5.0
+t += -6
+%on: Ryd420Trg
+t += 1.0
 on: Ryd420Hold
 t += 1.0
 off: Ryd420Trg
 t += 0.1
-on: Ryd420ExpShutter
-t += 10-5-1-0.1
+%on: Ryd420ExpShutter
+t += 6-1-1-0.1
 
 t += -6
-on: Ryd1013Trg
+%on: Ryd1013Trg
 t += 1
 %on: Ryd1013Hold
 t += 0.1
@@ -83,14 +83,17 @@ t += 0.5
 on: TweezerHold
 t += 0.001
 
-off: TweezerTrg
+%off: TweezerTrg
 
 t += 0.4/1000 %0.00025
 
+call ReleaseRecapture(t_twz_release)
+
 %%%%% Rabi %%%%%%
 on: do8_4 %dummy trigger for picoscope
-on: Ryd420Trg % scan to get Rabi
-t += time_scan_us/1000 %time_scan_us/1000
+t += 1
+%on: Ryd420Trg % scan to get Rabi
+%t += time_scan_us/1000 %time_scan_us/1000
 off: Ryd420Trg
 off: do8_4 
 t += 0.4/1000
@@ -113,7 +116,7 @@ off: TweezerHold
 %t += 0.002
 
 t += -0.08
-dacramp: TweezerIntensity twz_intensity*0.1 twz_intensity 0.06
+dacramp: TweezerIntensity twz_intensity*0.1 twz_intensity 10 %0.06
 t += 0.08
 
 %pulseon: MWAmpTrg 0.1

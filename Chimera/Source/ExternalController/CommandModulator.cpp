@@ -483,7 +483,7 @@ void CommandModulator::setMakoFeatureValue(QString whichMako, QString featureNam
 	}
 }
 
-void CommandModulator::setPicoScrewPosition(QString whichScrew, QString value, ErrorStatus& status)
+void CommandModulator::setPicoScrewPosition(QString whichScrew, QString value, QString bUpdate, ErrorStatus& status)
 {
 	auto& picoSys = auxWin->getPsSys();
 	unsigned channel;
@@ -504,19 +504,51 @@ void CommandModulator::setPicoScrewPosition(QString whichScrew, QString value, E
 		status.errorMsg = "Error\nError in converting command argument to number";
 		return;
 	}
+	bool update;
+	try {
+		update = boost::lexical_cast<bool>(str(bUpdate));
+	}
+	catch (boost::bad_lexical_cast&) {
+		status.error = true;
+		status.errorMsg = "Error\nError in converting command argument " + str(value) + " to bool";
+		return;
+	}
 	picoSys.updateCurrentEditValue(channel - 1, pos);
-	picoSys.handleProgramNowPress(auxWin->getUsableConstants());
+	if (update) {
+		picoSys.handleProgramNowPress(auxWin->getUsableConstants());
+	}
 }
 
 void CommandModulator::getPicoScrewPositions(QVector<char>& positionValue, ErrorStatus& status)
 {
-	auto& picoCore = auxWin->getPsSys().getCore();
-	std::vector<int> position;
-	for (auto id : range(PICOSCREW_NUM)) {
-		position.push_back(picoCore.motorPosition(id));
+	try {
+		auto& picoCore = auxWin->getPsSys().getCore();
+		std::vector<int> position;
+		for (auto id : range(PICOSCREW_NUM)) {
+			position.push_back(picoCore.motorPosition(id));
+		}
+		std::vector<char> positionChar = vectorToVectorChar(position);
+		positionValue = QVector<char>::fromStdVector(positionChar);
 	}
-	std::vector<char> positionChar = vectorToVectorChar(position);
-	positionValue = QVector<char>::fromStdVector(positionChar);
+	catch (ChimeraError& e) {
+		status.error = true;
+		status.errorMsg = "Error\nError in getPicoScrewPositions " + e.trace();
+		return;
+	}
+}
+
+void CommandModulator::setPicoScrewHomes(ErrorStatus& status)
+{
+	try {
+		for (auto ch : range(PICOSCREW_NUM)) {
+			auxWin->getPsSys().getCore().setHomePosition(ch);
+		}
+	}
+	catch (ChimeraError& e) {
+		status.error = true;
+		status.errorMsg = "Error\nError in setPicoScrewHomes " + e.trace();
+		return;
+	}
 }
 
 

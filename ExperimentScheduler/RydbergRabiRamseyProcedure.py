@@ -1,6 +1,7 @@
 import numpy as np
 from ExperimentProcedure import *
 from ExperimentProcedure import experiment_monitoring, analog_in_calibration_monitoring
+from RydbergBeamMoveProcedure import move_beam_to_target, RYDBERG_BEAM_420_POSITION, RYDBERG_BEAM_1013_POSITION
 import time
 
 
@@ -169,10 +170,23 @@ def _calibration():
     analog_in_calibration(exp=exp, name = "prb_pwr")
     exp.save_all()
     config_file.reopen()
+    sleep(1)
+
+
+def recenter_beams():
+    exp.setDAC()
+    sleep(1)
+    exp.setDDS()
+    move_beam_to_target(exp=exp, mako_idx=3, pico_idx=(1,2), target_position=RYDBERG_BEAM_420_POSITION, tolerance=0.2)
+    sleep(1)
+    move_beam_to_target(exp=exp, mako_idx=4, pico_idx=(3,4), target_position=RYDBERG_BEAM_1013_POSITION, tolerance=0.2)
+    sleep(1)
+
 
 def calibration(exp_idx):
     try:
         _calibration()
+        recenter_beams()
         resonace_scan(exp_idx=exp_idx, timeout_control = {'use':True, 'timeout':900})
     except Exception as e:
         print(e)
@@ -182,6 +196,7 @@ def calibration(exp_idx):
     try:
         _calibration()
         exp.hardware_controller.restart_zynq_control()
+        recenter_beams()
         rabi_scan(exp_idx=exp_idx, timeout_control = {'use':True, 'timeout':1200}) #1500
         sleep(1)
         # _calibration()
@@ -198,10 +213,10 @@ def calibration(exp_idx):
 
 
 def procedure():
-    for idx in np.arange(100):
-        if idx<=27: continue
+    for idx in np.arange(1):
+        # if idx<=1: continue
         print(f"Running experiment sets number {idx}")
-        if idx != 28:
+        if idx != 0:
             exp.hardware_controller.restart_zynq_control()
         calibration(idx)
 

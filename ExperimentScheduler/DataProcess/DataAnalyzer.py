@@ -102,7 +102,56 @@ class DataAnalysis:
         x, y, yerr = self.exp_file.individual_keys[0][:], result['loading_rate'][:], result['loading_rate_err'][:]
         return x,y,yerr
 
-    def analyze_data(self, function = gaussian, debug=False) -> List[ah.unc.UFloat]:
+    def analyze_mako_data(self, mako_idx: int, function = gaussian, debug=False) -> List[ah.unc.UFloat]:
+        if mako_idx not in [1,2,3,4]:
+            raise ValueError("mako_idx out of the range. Ranges are " + str([1,2,3,4]))
+        try:
+            if mako_idx==1:
+                mpic = self.exp_file.get_mako1_pics()[0]
+            elif mako_idx==2:
+                mpic = self.exp_file.get_mako2_pics()[0]
+            elif mako_idx==3:
+                mpic = self.exp_file.get_mako3_pics()[0]
+            else:
+                mpic = self.exp_file.get_mako4_pics()[0]
+        except KeyError as err:
+            raise err
+
+        positions = []
+        for idv, mvar in enumerate(mpic):
+            tmp = []
+            for idr, mrep in enumerate(mvar):
+                hori, vert = mrep.mean(axis=0), mrep.mean(axis=1)
+                _1 = ah.fit_data(np.arange(hori.size), hori, fit_function=function, use_unc=False)[0][1]
+                _2 = ah.fit_data(np.arange(vert.size), vert, fit_function=function, use_unc=False)[0][1]
+                tmp.append([_1,_2])
+            positions.append(tmp)
+        positions = np.array(positions)
+        avg_pos = positions.mean(axis=1) # average over repetitions
+        horizontal, vertical = avg_pos[:,0], avg_pos[:,1] # shape as [var]
+
+        if debug:
+            vertical = positions[:,:,1].flatten() # positions.mean(axis=1)[:,1] # [:,0] for horizontal, [:,1] for vertical
+            fig, ax = mp._plotDiscetePointsAndDistribution(
+                ah.unp.nominal_values(vertical),
+                "vertical pixel",
+                plot_y_err=ah.unp.std_devs(vertical),
+                exp_file=self.exp_file, fit=False
+            )
+            ax[0].set_xlabel('exp rep #')
+
+            vertical = positions[:,:,0].flatten() # positions.mean(axis=1)[:,1] # [:,0] for horizontal, [:,1] for vertical
+            fig, ax = mp._plotDiscetePointsAndDistribution(
+                ah.unp.nominal_values(vertical),
+                "horizontal pixel",
+                plot_y_err=ah.unp.std_devs(vertical),
+                exp_file=self.exp_file, fit=False
+            )
+            ax[0].set_xlabel('exp rep #')
+
+        return vertical, horizontal
+
+    def analyze_data(self, xkey = None, function = gaussian, debug=False) -> List[ah.unc.UFloat]:
         result = ah.getAtomSurvivalData(
             self.andor_datas,
             atomLocation=self.maximaLocs,
@@ -112,6 +161,11 @@ class DataAnalysis:
         )
 
         x, y, yerr = self.exp_file.individual_keys[0][:], result['survival_mean'][:], result['survival_err'][:]
+        if xkey is not None:
+            xkey = np.array(xkey)
+            if xkey.shape != y.shape:
+                raise ValueError("xkey shape does not match y!")
+            x = xkey.copy()
         x_fit = x[yerr!=0]; y_fit = y[yerr!=0]; yerr_fit = yerr[yerr!=0]
         p0 = function.guess(x, y)
         p, c = ah.fit(function.f, x_fit, y_fit, sigma=yerr_fit, p0=p0)
@@ -130,7 +184,7 @@ class DataAnalysis:
 
         return punc
 
-    def analyze_data_2D(self, function_d0 = Quadratic, function_d1 = gaussian, debug=False) -> List[ah.unc.UFloat]:
+    def analyze_data_2D(self, xkey0 = None, function_d0 = Quadratic, function_d1 = gaussian, debug=False) -> List[ah.unc.UFloat]:
         result = ah.getAtomSurvivalData(
             self.andor_datas,
             atomLocation=self.maximaLocs,
@@ -160,8 +214,12 @@ class DataAnalysis:
             popt_uncs.append(punc)
         popt_uncs=np.array(popt_uncs)
 
-
         x,y,yerr = self.exp_file.individual_keys[0][:], ah.nominal(popt_uncs[:,1])[:] , ah.std_dev(popt_uncs[:,1])[:] 
+        if xkey0 is not None:
+            xkey0 = np.array(xkey0)
+            if xkey0.shape != y.shape:
+                raise ValueError("xkey shape does not match y!")
+            x = xkey0
         function = function_d0
         p0 =  function.guess(x,y)
         p,c = ah.fit(function.f, x[:], y[:], p0=p0, sigma=yerr[:])

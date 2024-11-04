@@ -35,6 +35,7 @@ t += 1
 
 on: Ryd420Shutter
 off: Ryd420ExpShutter
+on: Ryd1013Shutter
 dac: Ryd1013Amp 0.0 %0.01 %0.05 %0.34
 t += 5
 
@@ -49,15 +50,15 @@ dac: MW_IQ_Q 0
 dacramp: TweezerIntensity twz_intensity twz_intensity*0.1 10
 t += 10
 
-dac: Ryd1013Amp 0.0 %amplitude_scan 
-off: Ryd1013Trg
+dac: Ryd1013Amp amplitude_scan  %0.1
+on: Ryd1013Trg
 t += 1
 
-% 2,2 ->1,1,  7.4075MHz
+% 2,2 ->1,1,  7.24MHz - 20241030 cold
 pulseon: MWTrg 0.4
 t += 1
-pulseon: MWAmpTrg time_scan %0.0398 %time_scan %0.0836
-t += time_scan+0.1 %0.0398+0.010 %time_scan %0.041+0.1 
+pulseon: MWAmpTrg 0.105 %0.0398 %time_scan %0.0836
+t += 0.105+0.1 %0.0398+0.010 %time_scan %0.041+0.1 
 
 t += 1
 off: Ryd1013Trg

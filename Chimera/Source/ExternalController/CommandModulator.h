@@ -44,8 +44,9 @@ public slots:
 	void getMakoImageDimension(QString whichMako, QVector<char>& imgDimParamResult, ErrorStatus& status);
 	void getMakoFeatureValue(QString whichMako, QString featureName, QString featureType, QVector<char>& featureValue, ErrorStatus& status);
 	void setMakoFeatureValue(QString whichMako, QString featureName, QString featureType, QString featureValue, ErrorStatus& status);
-	void setPicoScrewPosition(QString whichScrew, QString value, ErrorStatus& status);
+	void setPicoScrewPosition(QString whichScrew, QString value, QString bUpdate, ErrorStatus& status);
 	void getPicoScrewPositions(QVector<char>& positionValue, ErrorStatus& status);
+	void setPicoScrewHomes(ErrorStatus& status);
 
 public:
 	template<typename T>

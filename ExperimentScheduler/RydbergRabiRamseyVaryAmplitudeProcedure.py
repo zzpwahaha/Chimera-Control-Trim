@@ -1,5 +1,6 @@
 import numpy as np
 from ExperimentProcedure import *
+from RydbergBeamMoveProcedure import move_beam_to_target
 import time
 
 
@@ -24,7 +25,7 @@ binnings = np.linspace(0, 240, 241)
 analysis_locs = da.DataAnalysis(year='2024', month='August', day='26', data_name='data_1', 
                                 window=window, thresholds=70, binnings=binnings)
 
-def resonace_scan(exp_idx, exp_name_prefix, pulse_time=0.15, timeout_control = {'use':False, 'timeout':600}):
+def resonace_scan(exp_idx, exp_name_prefix, exp_name_postfix = "", pulse_time=0.15, timeout_control = {'use':False, 'timeout':600}):
     script_name = "Calibration_rydberg_420_1013_excitation.mScript"
 
     # Update configuration
@@ -38,7 +39,10 @@ def resonace_scan(exp_idx, exp_name_prefix, pulse_time=0.15, timeout_control = {
     
     # Setup experiment details
     YEAR, MONTH, DAY = today()
-    exp_name = f"{exp_name_prefix}-{exp_idx}" #EFIELD-RESONANCE-SCAN-Z-MINUS
+    if exp_name_postfix == "":
+        exp_name = f"{exp_name_prefix}-{exp_idx}" #EFIELD-RESONANCE-SCAN-Z-MINUS
+    else:
+        exp_name = f"{exp_name_prefix}-{exp_idx}-{exp_name_postfix}" #EFIELD-RESONANCE-SCAN-Z-MINUS
     exp.open_configuration("\\ExperimentAutomation\\" + config_name)
     exp.open_master_script("\\ExperimentAutomation\\" + script_name)
     exp.run_experiment(exp_name)
@@ -64,7 +68,7 @@ def resonace_scan(exp_idx, exp_name_prefix, pulse_time=0.15, timeout_control = {
     exp.open_configuration("\\ExperimentAutomation\\" + config_name)
     return fit_fail
 
-def rabi_scan(exp_idx, exp_name_prefix, range_values, variations, timeout_control = {'use':False, 'timeout':600}):
+def rabi_scan(exp_idx, exp_name_prefix, range_values, variations, exp_name_postfix = "", timeout_control = {'use':False, 'timeout':600}):
     script_name = "Calibration_rydberg_420_1013_excitation.mScript"
     config_file.modify_parameter("REPETITIONS", "Reps:", str(6))
     for variable in config_file.config_param.variables:
@@ -81,7 +85,10 @@ def rabi_scan(exp_idx, exp_name_prefix, range_values, variations, timeout_contro
     config_file.save()
     
     YEAR, MONTH, DAY = today()
-    exp_name = f"{exp_name_prefix}-{exp_idx}"
+    if exp_name_postfix == "":
+        exp_name = f"{exp_name_prefix}-{exp_idx}"
+    else:
+        exp_name = f"{exp_name_prefix}-{exp_idx}-{exp_name_postfix}"
     exp.open_configuration("\\ExperimentAutomation\\" + config_name)
     exp.open_master_script("\\ExperimentAutomation\\" + script_name)
     exp.run_experiment(exp_name)
@@ -92,8 +99,19 @@ def rabi_scan(exp_idx, exp_name_prefix, range_values, variations, timeout_contro
     data_analysis = da.DataAnalysis(YEAR, MONTH, DAY, exp_name, maximaLocs=analysis_locs.maximaLocs,
                             window=window, thresholds=thresholds, binnings=binnings, 
                             annotate_title = exp_name, annotate_note=" ")
+    x,y_loading, _ = data_analysis.get_loading_result_1D()
+    if y_loading.mean()<0.1:
+        raise ValueError("Loading rate is low. Sugguest rerun the data.")
     return
 
+def recenter_beams():
+    exp.setDAC()
+    sleep(1)
+    exp.setDDS()
+    move_beam_to_target(exp=exp, mako_idx=3, pico_idx=(1,2), target_position=(18,28.7), tolerance=0.3)
+    sleep(1)
+    move_beam_to_target(exp=exp, mako_idx=4, pico_idx=(3,4), target_position=(32.5,25.2), tolerance=0.3)
+    sleep(1)
 
 def _calibration():
     exp.setZynqOutput()
@@ -102,48 +120,82 @@ def _calibration():
     config_file.reopen()
 
 def calibration(exp_idx, blue_amp, red_amp):
-    pulse_time = (0.15-0.10)*((0.45*0.18)/((blue_amp)*red_amp))**1/2+0.10
-    time_range = [[0.01,0.33], [1.5,1.8], [3,3.3]]
-    num_points = [17,11,11]
+    pulse_time = round(0.0238/(blue_amp*red_amp+4.625e-3)**0.5+7.44e-2, 2)
+    if pulse_time < 0.21:
+        time_range = [[0.01,0.33], [1.5,1.8], [3,3.3]]
+        num_points = [17,11,11]
+    elif pulse_time < 0.27:
+        time_range = [[0.01,0.52], [1.5,1.8], [3,3.3]]
+        num_points = [17,11,11]
+    else:
+        time_range = [[0.01,0.65], [1.5,2.0], [3.5,4.0]]
+        num_points = [17,11,11]
     prefix_str = f"BLUEAMP_{blue_amp:.2f}-REDAMP_{red_amp:.2f}"
-    try:
-        _calibration()
-        config_file.config_param.update_variable("ryd_420_amplitude", constant_value = blue_amp)
-        config_file.config_param.update_variable("ryd_1013_amplitude", constant_value = red_amp)        
-        config_file.save()
-        resonace_scan(exp_idx=exp_idx, exp_name_prefix="RESONANCE-SCAN-"+prefix_str, pulse_time=pulse_time, 
-                      timeout_control = {'use':True, 'timeout':900})
-    except Exception as e:
-        print(e)
-        exp.hardware_controller.restart_zynq_control()
-        return False
-    try:
-        _calibration()
-        config_file.config_param.update_variable("ryd_420_amplitude", constant_value = blue_amp)
-        config_file.config_param.update_variable("ryd_1013_amplitude", constant_value = red_amp)        
-        config_file.save()
-        exp.hardware_controller.restart_zynq_control()
-        rabi_scan(exp_idx=exp_idx, exp_name_prefix="RABI-SCAN-"+prefix_str, range_values=time_range, variations=num_points,
-                  timeout_control = {'use':True, 'timeout':1200}) #1500
-        sleep(1)
-    except Exception as e:
-        print(e)
-        exp.hardware_controller.restart_zynq_control()
-        return False
+
+    repeat_idx = 0
+    while True:
+        try:
+            if repeat_idx==0: post_fix = ""
+            else: post_fix = str(repeat_idx)
+            recenter_beams()
+            _calibration()
+            config_file.config_param.update_variable("ryd_420_amplitude", constant_value = blue_amp)
+            config_file.config_param.update_variable("ryd_1013_amplitude", constant_value = red_amp)        
+            config_file.save()
+            resonace_scan(exp_idx=exp_idx, exp_name_prefix="RESONANCE-SCAN-"+prefix_str,
+                        exp_name_postfix=post_fix,
+                        pulse_time=pulse_time, 
+                        timeout_control = {'use':True, 'timeout':900})
+            break
+        except Exception as e:
+            print(e)
+            exp.hardware_controller.restart_zynq_control()
+            repeat_idx += 1
+            if repeat_idx == 3: 
+                break
+            # return False
+    
+    repeat_idx = 0
+    while True:
+        try:
+            if repeat_idx==0: post_fix = ""
+            else: post_fix = str(repeat_idx)
+            recenter_beams()
+            _calibration()
+            config_file.config_param.update_variable("ryd_420_amplitude", constant_value = blue_amp)
+            config_file.config_param.update_variable("ryd_1013_amplitude", constant_value = red_amp)        
+            config_file.save()
+            exp.hardware_controller.restart_zynq_control()
+            rabi_scan(exp_idx=exp_idx, exp_name_prefix="RABI-SCAN-"+prefix_str, 
+                    exp_name_postfix=post_fix,
+                    range_values=time_range, variations=num_points,
+                    timeout_control = {'use':True, 'timeout':1200}) #1500
+            sleep(1)
+            break
+        except Exception as e:
+            print(e)
+            exp.hardware_controller.restart_zynq_control()
+            repeat_idx += 1
+            if repeat_idx == 3: 
+                break
+            # return False
     
     return True
 
 def procedure():
-    ryd_420_amplitude = [0.1, 0.15,0.2]
-    ryd_1013_amplitude = [0.15,0.3,0.45]
+    ryd_420_amplitude = [0.08, 0.09,0.1, 0.11,0.12,0.13,0.14, 0.15]
+    ryd_1013_amplitude = [0.15,0.22,0.3,0.38,0.45]
     RYD_420, RYD_1013 = np.meshgrid(ryd_420_amplitude, ryd_1013_amplitude)
 
     for idx_exp in np.arange(10):
-        if idx_exp<=1:
-            continue
+        # if idx_exp<=1:
+            # continue
         for id, (blue_amp, red_amp) in enumerate(zip(RYD_420.flatten(), RYD_1013.flatten())):
+            if idx_exp==0:
+                if red_amp in [0.15,0.22]: continue
+                if red_amp in [0.3] and blue_amp in [0.08]: continue
             print(f"Running experiment sets number {idx_exp}")
-            if idx_exp != 2 and id != 0:
+            if idx_exp != 0 and id != 17:
                 exp.hardware_controller.restart_zynq_control()
             success = calibration(idx_exp, blue_amp=blue_amp,red_amp=red_amp)
 

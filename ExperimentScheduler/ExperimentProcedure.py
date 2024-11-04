@@ -75,10 +75,11 @@ class ExperimentProcedure:
         start_of_data = delimiter_index + 1 + 8
         if data_type=='double':
             vector_data = result_message[start_of_data:start_of_data + size * 8]  # 8 bytes per double
+            print(f"len(vector_data): {len(vector_data)}")
             vector = struct.unpack(f'<{size}d', vector_data)  # Unpack as double values
         elif data_type == 'int':
-            vector_data = result_message[start_of_data:start_of_data + size * 8]  # 8 bytes per int
-            vector = struct.unpack(f'<{size}q', vector_data)  # Unpack as int values
+            vector_data = result_message[start_of_data:start_of_data + size * 4]  # 4 bytes per int
+            vector = struct.unpack(f'<{size}i', vector_data)  # Unpack as int values
         elif data_type == 'char' or data_type == 'string':
             vector_data = result_message[start_of_data:start_of_data + size * 1]  # 1 bytes per char
             vector = struct.unpack(f'<{size}s', vector_data)  # Unpack as char values
@@ -149,11 +150,23 @@ class ExperimentProcedure:
         self.setOL()
         time.sleep(1)
 
+    def startMako(self, mako_idx: int):
+        if mako_idx not in [1,2,3,4]:
+            print("mako_idx out of the range. Ranges are " + str([1,2,3,4]))
+            return
+        return self.chimera_data_command(f"Start-MAKO $mako{mako_idx:d}") 
+
+    def stopMako(self, mako_idx: int):
+        if mako_idx not in [1,2,3,4]:
+            print("mako_idx out of the range. Ranges are " + str([1,2,3,4]))
+            return
+        return self.chimera_data_command(f"Stop-MAKO $mako{mako_idx:d}") 
+
     def getMakoImage(self, mako_idx: int):
         if mako_idx not in [1,2,3,4]:
             print("mako_idx out of the range. Ranges are " + str([1,2,3,4]))
             return
-        return self.chimera_data_command(f"Get-MAKO-Image $mako{mako_idx:d}", 16*65536*8) # .reshape(height, width)
+        return self.chimera_data_command(f"Get-MAKO-Image $mako{mako_idx:d}", bufsize=65536*8) # .reshape(height, width)
 
     def getMakoImageDimension(self, mako_idx: int):
         if mako_idx not in [1,2,3,4]:
@@ -177,14 +190,20 @@ class ExperimentProcedure:
             return
         return self.chimera_command(f"Set-MAKO-Feature-Value $mako{mako_idx:d}${feature_name}${feature_type}${feature_value}")
 
-    def setPicoScrewPosition(self, pico_idx: int, position: int):
+    def setPicoScrewPosition(self, pico_idx: int, position: int, update: bool = True):
         if pico_idx not in [1,2,3,4]:
             print("pico_idx out of the range. Ranges are " + str([1,2,3,4]))
             return
         if position>500 or position<-500:
             print("Are you sure you want to move this much???")
             return
-        return self.chimera_command(f"Set-PicoScrew-Position ${pico_idx:d}${position:d}")
+        return self.chimera_command(f"Set-PicoScrew-Position ${pico_idx:d}${position:d}${int(update)}")
+
+    def getPicoScrewPositions(self):
+        return self.chimera_data_command(f"Get-PicoScrew-Positions", data_type='int')
+
+    def setPicoScrewHomes(self):
+        return self.chimera_data_command(f"Set-PicoScrew-Homes", data_type='int')
 
 def experiment_monitoring(exp : ExperimentProcedure, timeout_control = {'use':False, 'timeout':600}):
     # Monitor experiment status
@@ -238,8 +257,13 @@ def today():
 if __name__ == "__main__":
     # EfieldCalibrationProcedure()
     exp = ExperimentProcedure()
+    from RydbergBeamMoveProcedure import extract_beam_position_on_mako
     # exp.run_calibration("prb_pwr")
     # exp.setStaticDDS(580.9,0)
+    extract_beam_position_on_mako(exp,4)
+    pos = exp.getPicoScrewPositions()
+    exp.startMako(3)
+    exp.stopMako(3)
     exp.setPicoScrewPosition(1,0)
     exp.setTTL(name="ryd1013trg", value=True)
     exp.setTTL(name="ryd420trg", value=True)

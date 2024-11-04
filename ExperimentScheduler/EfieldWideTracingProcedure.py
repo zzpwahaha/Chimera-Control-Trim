@@ -68,7 +68,7 @@ def _calibration():
     exp.save_all()
     config_file.reopen()
 
-def _move_EOM_resonance(start_freq, end_freq, step = 0.1):
+def _raw_move_EOM_resonance(exp:ExperimentProcedure, start_freq, end_freq, step = 0.1):
     if start_freq == end_freq:
         return
     freqs = np.arange(start_freq, end_freq, step)
@@ -77,6 +77,9 @@ def _move_EOM_resonance(start_freq, end_freq, step = 0.1):
         sleep(0.25)
     exp.setStaticDDS(ddsfreq=end_freq, channel=0)
     sleep(0.5)
+
+def _move_EOM_resonance(start_freq, end_freq, step = 0.1):
+    _raw_move_EOM_resonance(exp=exp, start_freq=start_freq, end_freq=end_freq, step=step)
     exp.save_all()
     config_file.reopen()
 
@@ -124,4 +127,5 @@ def efield_tracing_procedure():
 
 
 if __name__=='__main__':
-    efield_tracing_procedure()
+    # efield_tracing_procedure()
+    _raw_move_EOM_resonance(exp, 581,586)
