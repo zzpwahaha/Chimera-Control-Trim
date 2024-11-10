@@ -102,7 +102,7 @@ on: Ryd1013Hold
 t += 0.4/1000 %0.00025
 on: do8_4 %dummy trigger for picoscope
 on: Ryd420Trg % scan to get Rabi
-t += Ryd_pi2_us/1000 %time_scan_us/1000
+t += Ryd_pi_us/1000 %time_scan_us/1000
 off: Ryd420Trg
 %t += 0.45/1000
 %off: Ryd1013Trg
@@ -122,7 +122,7 @@ t += time_scan_us/1000/2
 %on: Ryd1013Trg
 %t += -0.05/1000
 on: Ryd420Trg % scan to get Rabi
-t += Ryd_pi2_us/1000 %time_scan_us/1000
+t += Ryd_pi_us/1000 %time_scan_us/1000
 off: Ryd420Trg
 off: do8_4 %dummy trigger for picoscope
 t += 0.4/1000

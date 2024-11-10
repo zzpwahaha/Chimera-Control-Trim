@@ -87,7 +87,7 @@ def high_to_low_direction(exp_idx):
     EOM_center_freqs = np.linspace(586, 486, 11)
     previous_f = 586
     for idx, eom_f in enumerate(EOM_center_freqs):
-        _move_EOM_resonance(previous_f, eom_f)
+        _move_EOM_resonance(previous_f, eom_f, step=-0.1)
         previous_f = eom_f
         _calibration()
         sleep(1)
@@ -103,7 +103,7 @@ def low_to_high_direction(exp_idx):
     EOM_center_freqs = np.linspace(486, 586, 11)
     previous_f = 486
     for idx, eom_f in enumerate(EOM_center_freqs):
-        _move_EOM_resonance(previous_f, eom_f)
+        _move_EOM_resonance(previous_f, eom_f, step=0.1)
         previous_f = eom_f
         _calibration()
         sleep(1)
@@ -128,4 +128,5 @@ def efield_tracing_procedure():
 
 if __name__=='__main__':
     # efield_tracing_procedure()
-    _raw_move_EOM_resonance(exp, 581,586)
+    # _raw_move_EOM_resonance(exp, start_freq=581,end_freq=586,step=0.1)
+    _raw_move_EOM_resonance(exp, start_freq=508,end_freq=515,step=0.1)

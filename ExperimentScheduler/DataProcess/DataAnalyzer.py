@@ -12,6 +12,7 @@ import numpy as np
 import ExpFile as exp
 import AnalysisHelpers as ah
 import MatplotlibPlotters as mp
+from fitters import decaying_cos
 from fitters.Gaussian import gaussian
 from fitters.Polynomial import Quadratic
 from remoteDataPaths import get_data_files
@@ -151,7 +152,7 @@ class DataAnalysis:
 
         return vertical, horizontal
 
-    def analyze_data(self, xkey = None, function = gaussian, debug=False) -> List[ah.unc.UFloat]:
+    def analyze_data(self, xkey = None, function = gaussian, p0=None, debug=False) -> List[ah.unc.UFloat]:
         result = ah.getAtomSurvivalData(
             self.andor_datas,
             atomLocation=self.maximaLocs,
@@ -167,7 +168,8 @@ class DataAnalysis:
                 raise ValueError("xkey shape does not match y!")
             x = xkey.copy()
         x_fit = x[yerr!=0]; y_fit = y[yerr!=0]; yerr_fit = yerr[yerr!=0]
-        p0 = function.guess(x, y)
+        if p0 is None:
+            p0 = function.guess(x, y)
         p, c = ah.fit(function.f, x_fit, y_fit, sigma=yerr_fit, p0=p0)
         punc = ah.getConfidentialInterval(p, c, n_sample=x.size)
         print(ah.printFittingResult(func=function, popt_unc=punc)[1])

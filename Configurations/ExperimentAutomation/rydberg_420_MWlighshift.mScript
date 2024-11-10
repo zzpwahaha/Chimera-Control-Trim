@@ -35,9 +35,8 @@ t += 1
 
 on: Ryd420Shutter
 off: Ryd420ExpShutter
-on: Ryd1013Shutter
-dac: Ryd1013Amp 0.0 %0.01 %0.05 %0.34
-t += 5
+dac: Ryd420Amp 0.1 %amplitude_scan %0.01 %0.05 %0.34
+t += 15
 
 %%%%%%%%%%%%%%% MW %%%%%%%%%%%
 var mw_rabi_pi2 0.0447 %0.041 %0.041 %0.01 %0.0599 %0.0296
@@ -50,36 +49,40 @@ dac: MW_IQ_Q 0
 dacramp: TweezerIntensity twz_intensity twz_intensity*0.1 10
 t += 10
 
-dac: Ryd1013Amp amplitude_scan  %0.1
-on: Ryd1013Trg
-t += 1
+%%%%420%%%
+t += -10
+on: Ryd420Trg
+t += 3.0
+on: Ryd420Hold
+t += 2.0
+off: Ryd420Trg
+t += 0.1
+on: Ryd420ExpShutter
+t += 10-3-2-0.1
+%%%%420%%%
 
-% 2,2 ->1,1,  7.24MHz - 20241030 cold
-pulseon: MWTrg 0.4
-t += 1
-on: DO8_4
-pulseon: MWAmpTrg time_scan %0.105 %0.0398 %time_scan %0.0836
-t += time_scan+0.1 %0.0398+0.010 %time_scan %0.041+0.1 
-off: DO8_4
 
-t += 1
-off: Ryd1013Trg
-
+%% 2,2 ->1,1,  7.4075MHz
 %pulseon: MWTrg 0.4
 %t += 1
+%pulseon: MWAmpTrg time_scan %0.0836
+%t += time_scan %0.041+0.1 
 
-%t += 0.1
-%on: Ryd1013Trg
-%t += 0.001
-%
-%pulseon: do8_4 time_scan
-%pulseon: MWAmpTrg time_scan %0.082 %0.09
-%t += time_scan %0.082+0.1 
-%
-%t += 0.001
-%off: Ryd1013Trg
-%t += 0.001
+pulseon: MWTrg 0.4
+t += 1
 
+t += 0.1
+on: Ryd420Trg
+t += 0.001
+
+pulseon: do8_4 time_scan
+pulseon: MWAmpTrg time_scan %0.082 %0.09
+t += time_scan+0.1 %0.082+0.1 
+
+t += 0.001
+off: Ryd420Trg
+t += 0.001
+off: Ryd420Hold
 
 pulseon: DO1_0 1
 %t += time_scan %10

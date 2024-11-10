@@ -283,8 +283,16 @@ def start_and_stop_camera(exp:ExperimentProcedure):
     exp.stopMako(mako_idx=4)
     sleep(1)
 
+def zeroScrews(exp:ExperimentProcedure):
+    exp.setPicoScrewHomes()
+    exp.setPicoScrewPosition(1,0, update=False)
+    exp.setPicoScrewPosition(2,0, update=False)
+    exp.setPicoScrewPosition(3,0, update=False)
+    exp.setPicoScrewPosition(4,0, update=False)
 
 if __name__ == '__main__':
+    zeroScrews(exp)
+
     rydberg_420_lightshift(exp_postfix="2D-preAlignment")
     exp.hardware_controller.restart_zynq_control()
     rydberg_420_alignment(exp_postfix="2D", pico_idx=1)

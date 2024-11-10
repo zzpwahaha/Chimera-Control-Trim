@@ -111,9 +111,9 @@ off: Ryd420Trg
 %on: MWAmpTrg
 %on: TweezerTrg
 t += time_scan_us/1000/2
-%on: Ryd420Trg % scan to get Rabi
-%t += Ryd_pi_us/1000 %time_scan_us/1000
-%off: Ryd420Trg
+on: Ryd420Trg % scan to get Rabi
+t += Ryd_pi_us/1000 %time_scan_us/1000
+off: Ryd420Trg
 t += time_scan_us/1000/2
 %off: MWAmpTrg
 %off: TweezerTrg

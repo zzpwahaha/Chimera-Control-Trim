@@ -26,7 +26,7 @@ def EfieldCalibrationProcedure():
     config_file.config_param.update_variable("ryd_1013_amplitude", constant_value = 0.45)
 
     config_file.config_param.update_variable("bias_e_x", scan_type="Variable", new_initial_values=[0], new_final_values=[2])
-    config_file.config_param.update_variable("bias_e_y", scan_type="Constant", new_initial_values=[-2], new_final_values=[0.0])
+    config_file.config_param.update_variable("bias_e_y", scan_type="Constant", new_initial_values=[-1.5], new_final_values=[0.5])
     config_file.config_param.update_variable("bias_e_z", scan_type="Constant", new_initial_values=[-1.0], new_final_values=[1.0])
     config_file.config_param.update_variable("resonance_scan", scan_type="Variable", new_initial_values=[73], new_final_values=[87])
 
