@@ -58,6 +58,7 @@ class DoSystem : public IChimeraSystem
 		bool getTtlStatus (unsigned row, int number );
 		void updateDefaultTtl(unsigned row, unsigned column, bool state);
 		bool getDefaultTtl(unsigned row, unsigned column);
+		void setSingleTtlGui(unsigned row, unsigned number, bool val); // used for external control, can have gui stuff
 
 		DOStatus getCurrentStatus( );
 

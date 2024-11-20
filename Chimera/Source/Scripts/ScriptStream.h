@@ -29,7 +29,7 @@ class ScriptStream : public std::stringstream
 		void clearReplacements();
 		virtual std::string getline();
 		virtual std::string getline(char delim);
-	private:
+private:
 		// just for debugging purposes. 
 		std::string initialContents;
 		void eatComments();

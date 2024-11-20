@@ -327,13 +327,13 @@ std::vector<calSettings> CalibrationManager::getCalibrationInfo (){
 	return calibrations;
 }
 
-void CalibrationManager::handleSaveConfig(std::stringstream& configStream)
+void CalibrationManager::handleSaveConfig(ConfigStream& configStream)
 {
 	handleSaveMasterConfig(configStream);
 	configStream << "\nEND_" + systemDelim + "\n";
 }
 
-void CalibrationManager::handleSaveMasterConfig (std::stringstream& configStream) {
+void CalibrationManager::handleSaveMasterConfig (ConfigStream& configStream) {
 	configStream << "\n" << systemDelim
 		<< "\n/*Auto Cal Checked: */ " << expAutoCalButton->isChecked ()
 		<< "\n/*Calibration Number: */ " << calibrations.size ();
@@ -342,7 +342,7 @@ void CalibrationManager::handleSaveMasterConfig (std::stringstream& configStream
 	}
 }
 
-void CalibrationManager::handleSaveMasterConfigIndvCal(std::stringstream& configStream, calSettings& cal) 
+void CalibrationManager::handleSaveMasterConfigIndvCal(ConfigStream& configStream, calSettings& cal)
 {
 	configStream << "\n/*Calibration Name: */ " << cal.result.calibrationName
 		<< "\n/*Analog Input Chanel: */ " << ai->getName(cal.aiInChan)
@@ -352,13 +352,18 @@ void CalibrationManager::handleSaveMasterConfigIndvCal(std::stringstream& config
 		<< "\n/*TTL Config Size: */ " << cal.ttlConfig.size () 
 		<< "\n/*ttl config: */ " << calTtlConfigToString (cal.ttlConfig)
 		<< "\n/*Analog Output Config Size: */ " << cal.aoConfig.size () << "\n/*Analog Output Config: */ ";
-	for (auto& dac : cal.aoConfig) {
-		configStream << ao->getName(dac.first) << " " << dac.second << " ";
+	if (cal.aoConfig.empty()) {
+		configStream << "";
+	}
+	else {
+		for (auto& dac : cal.aoConfig) {
+			configStream << ao->getName(dac.first) << " " << dac.second << " ";
+		}
 	}
 	configStream << "\n/*Data Point Average Number: */ " << cal.avgNum
-		<< "\n/*Use Agilent: */" << cal.useAg
-		<< "\n/*Which Agilent: */" << ArbGenEnum::toStr(cal.whichAg)
-		<< "\n/*Which Agilent Channel: */" << cal.agChannel;
+		<< "\n/*Use Agilent: */ " << cal.useAg
+		<< "\n/*Which Agilent: */ " << ArbGenEnum::toStr(cal.whichAg)
+		<< "\n/*Which Agilent Channel: */ " << cal.agChannel;
 		//<< "\n/*Include Sqrt on Next Cal: */" << cal.includeSqrt;
 	configStream << "\n/*Recent Calibration Result:*/"; 
 	handleSaveMasterConfigIndvResult (configStream, cal.result);
@@ -366,16 +371,16 @@ void CalibrationManager::handleSaveMasterConfigIndvCal(std::stringstream& config
 	handleSaveMasterConfigIndvResult (configStream, cal.historicalResult);
 }
 
-void CalibrationManager::handleSaveMasterConfigIndvResult (std::stringstream& configStream, calResult& result) 
+void CalibrationManager::handleSaveMasterConfigIndvResult (ConfigStream& configStream, calResult& result)
 {
 	configStream << "\n/*Number of Calibration Coefficients: */ " << result.calibrationCoefficients.size ()
 		<< "\n/*Calibration Coefficients: */ " << calBase::dblVecToString (result.calibrationCoefficients)
 		<< "\n/*Calibration BSpline order: */ " << result.orderBSpline
 		<< "\n/*Calibration BSpline breakpoints: */ " << result.nBreak
-		<< "\n/*Number of Control Vals: */" << result.ctrlVals.size ()
-		<< "\n/*Control Vals: */" << calBase::dblVecToString (result.ctrlVals)
-		<< "\n/*Number of Result Vals: */" << result.resVals.size ()
-		<< "\n/*Result Vals: */" << calBase::dblVecToString (result.resVals);
+		<< "\n/*Number of Control Vals: */ " << result.ctrlVals.size ()
+		<< "\n/*Control Vals: */ " << calBase::dblVecToString (result.ctrlVals)
+		<< "\n/*Number of Result Vals: */ " << result.resVals.size ()
+		<< "\n/*Result Vals: */ " << calBase::dblVecToString (result.resVals);
 }
 
 void CalibrationManager::handleOpenMasterConfigIndvResult (ConfigStream& configStream, calResult& result) 
@@ -385,6 +390,9 @@ void CalibrationManager::handleOpenMasterConfigIndvResult (ConfigStream& configS
 	if (numCoef > 50) {
 		// catch weird bad values...
 		thrower ("Suspicious Number of coefficients! Number was " + str (numCoef));
+	}
+	if (numCoef == 0) {
+		auto line = configStream.jumpline(); // remove the ConfigStream::emptyStringTxt
 	}
 	result.calibrationCoefficients.resize (numCoef);
 	for (auto& coef : result.calibrationCoefficients) {
@@ -399,6 +407,9 @@ void CalibrationManager::handleOpenMasterConfigIndvResult (ConfigStream& configS
 		// catch weird bad values...
 		thrower ("Suspicious Number of control vals! Number was " + str (numCtrlVals));
 	}
+	if (numCtrlVals == 0) {
+		auto line = configStream.jumpline(); // remove the ConfigStream::emptyStringTxt
+	}
 	result.ctrlVals.resize (numCtrlVals);
 	for (auto& val : result.ctrlVals) {
 		configStream >> val;
@@ -406,6 +417,9 @@ void CalibrationManager::handleOpenMasterConfigIndvResult (ConfigStream& configS
 
 	unsigned numResVals;
 	configStream >> numResVals;
+	if (numResVals == 0) {
+		auto line = configStream.jumpline(); // remove the ConfigStream::emptyStringTxt
+	}
 	if (numResVals > 500) {
 		// catch weird bad values...
 		thrower ("Suspicious Number of result vals! Number was " + str (numResVals));
@@ -452,6 +466,9 @@ calSettings CalibrationManager::handleOpenMasterConfigIndvCal (ConfigStream& con
 		configStream >> tmpInfo.active;
 		unsigned numSettings;
 		configStream >> numSettings;
+		if (numSettings == 0) {
+			auto line = configStream.jumpline(); // remove the ConfigStream::emptyStringTxt
+		}
 		tmpInfo.ttlConfig.resize (numSettings);
 		for (auto& ttl : tmpInfo.ttlConfig) {
 			configStream >> configValue;
@@ -461,6 +478,9 @@ calSettings CalibrationManager::handleOpenMasterConfigIndvCal (ConfigStream& con
 			}
 		}
 		configStream >> numSettings;
+		if (numSettings == 0) {
+			auto line = configStream.jumpline(); // remove the ConfigStream::emptyStringTxt
+		}
 		tmpInfo.aoConfig.resize (numSettings);
 		for (auto& aoc : tmpInfo.aoConfig) {
 			configStream >> configValue >> aoc.second;

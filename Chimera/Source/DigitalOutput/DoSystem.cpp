@@ -98,6 +98,12 @@ bool DoSystem::getDefaultTtl(unsigned row, unsigned column){
 	return outputs(row, column).defaultStatus;
 }
 
+void DoSystem::setSingleTtlGui(unsigned row, unsigned number, bool val)
+{
+	outputs(row, number).set(val);
+	core.FPGAForceOutput(getCurrentStatus());
+}
+
 std::pair<unsigned, unsigned> DoSystem::getTtlBoardSize(){
 	return { outputs.numRows, outputs.numColumns };
 }

@@ -19,6 +19,7 @@
 
 class IChimeraQtWindow;
 class ExpThreadWorker;
+class ConfigStream;
 
 class CalibrationManager : public IChimeraSystem {
 	public:
@@ -37,9 +38,9 @@ class CalibrationManager : public IChimeraSystem {
 		void inExpRunAllThreaded(ExpThreadWorker* expThread, bool calibrateOnlyActive);
 		void calibrateThreaded (calSettings& cal, unsigned which);
 		bool wantsExpAutoCal ();
-		void handleSaveConfig(std::stringstream& configStream);
-		void handleSaveMasterConfig (std::stringstream& configStream);
-		void handleSaveMasterConfigIndvResult (std::stringstream& configStream, calResult& cal);
+		void handleSaveConfig(ConfigStream& configStream);
+		void handleSaveMasterConfig (ConfigStream& configStream);
+		void handleSaveMasterConfigIndvResult (ConfigStream& configStream, calResult& cal);
 		void handleOpenMasterConfigIndvResult (ConfigStream& configStream, calResult& result);
 		void handleOpenMasterConfig (ConfigStream& configStream);
 		void handleOpenConfig(ConfigStream& configStream);
@@ -68,7 +69,7 @@ class CalibrationManager : public IChimeraSystem {
 		QCustomPlotCtrl calibrationViewer;
 		//PlotCtrl calibrationViewer;
 		void updateCalibrationView (calSettings& cal);
-		void handleSaveMasterConfigIndvCal (std::stringstream& configStream, calSettings& servo);
+		void handleSaveMasterConfigIndvCal (ConfigStream& configStream, calSettings& servo);
 		calSettings handleOpenMasterConfigIndvCal (ConfigStream& configStream);
 		std::vector<calSettings> calibrations;
 		void addCalToListview (calSettings& cal);
@@ -82,6 +83,8 @@ class CalibrationManager : public IChimeraSystem {
 		// for expThread in-exp calibration
 		std::mutex calibrationLock;
 		std::condition_variable calibrationConditionVariable;
+
+		friend class CommandModulator;
 };
 
 

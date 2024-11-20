@@ -1,0 +1,405 @@
+given this file, write a python class that manage and modify this .Config file
+Version: 1.0
+SCRIPTS
+/*Master Script Address:*/ C:/Chimera/Chimera-Cryo/Configurations/CryoTweezerLoading/rydberg_420_1013_excitation.mScript
+END_SCRIPTS
+GMOOG
+/*Experiment Active:*/ 1
+/*Scripted Arb Address:*/C:/Chimera/Chimera-Cryo/Configurations/CryoTweezerLoading/1x13tweezerloading.gScript
+END_GMOOG
+SIGLENT_AWG
+/*Synced Option:*/ 0
+CHANNEL_1
+/*Channel Mode:*/				no_control
+/*Polarity Invert:*/			0
+/*DC Level:*/					"!#EMPTY_STRING#!"
+/*DC Calibrated:*/				0
+/*Sine Amplitude:*/				0.85
+/*Sine Freq:*/					resonance_scan*1000
+/*Sine Phase:*/					0
+/*Sine Burst:*/					0
+/*Sine Calibrated:*/			0
+/*Square Amplitude:*/			5
+/*Square Freq:*/				2000
+/*Square Offset:*/				2.5
+/*Square DutyCycle:*/			40
+/*Square Phase:*/				pgc_flash_dutycycle
+/*Square Burst:*/				1
+/*Square Calibrated:*/			0
+/*Preloaded Arb Address:*/		"!#EMPTY_STRING#!"
+/*Preloaded Arb Calibrated:*/	0
+/*Preloaded Arb Burst:*/	0
+/*Scripted Arb Address:*/		"!#EMPTY_STRING#!"
+/*Scripted Arb Calibrated:*/	0
+CHANNEL_2
+/*Channel Mode:*/				no_control
+/*Polarity Invert:*/			0
+/*DC Level:*/					"!#EMPTY_STRING#!"
+/*DC Calibrated:*/				0
+/*Sine Amplitude:*/				0.85
+/*Sine Freq:*/					resonance_scan*1000
+/*Sine Phase:*/					phase_scan
+/*Sine Burst:*/					0
+/*Sine Calibrated:*/			0
+/*Square Amplitude:*/			5
+/*Square Freq:*/				2000
+/*Square Offset:*/				2.5
+/*Square DutyCycle:*/			50
+/*Square Phase:*/				0
+/*Square Burst:*/				1
+/*Square Calibrated:*/			0
+/*Preloaded Arb Address:*/		"!#EMPTY_STRING#!"
+/*Preloaded Arb Calibrated:*/	0
+/*Preloaded Arb Burst:*/	0
+/*Scripted Arb Address:*/		"!#EMPTY_STRING#!"
+/*Scripted Arb Calibrated:*/	0
+END_SIGLENT_AWG
+AGILENT_AWG
+/*Synced Option:*/ 0
+CHANNEL_1
+/*Channel Mode:*/				script
+/*Polarity Invert:*/			0
+/*DC Level:*/					twz_intensity*0.0
+/*DC Calibrated:*/				0
+/*Sine Amplitude:*/				twz_mod_amp
+/*Sine Freq:*/					twz_mod_freq
+/*Sine Phase:*/					0
+/*Sine Burst:*/					1
+/*Sine Calibrated:*/			0
+/*Square Amplitude:*/			"!#EMPTY_STRING#!"
+/*Square Freq:*/				"!#EMPTY_STRING#!"
+/*Square Offset:*/				"!#EMPTY_STRING#!"
+/*Square DutyCycle:*/			"!#EMPTY_STRING#!"
+/*Square Phase:*/				"!#EMPTY_STRING#!"
+/*Square Burst:*/				0
+/*Square Calibrated:*/			0
+/*Preloaded Arb Address:*/		sequence0.seq
+/*Preloaded Arb Calibrated:*/	0
+/*Preloaded Arb Burst:*/	0
+/*Scripted Arb Address:*/		C:/Chimera/Chimera-Cryo/Configurations/CryoTweezerLoading/trap_depth_fast_change.aScript
+/*Scripted Arb Calibrated:*/	0
+CHANNEL_2
+/*Channel Mode:*/				output_off
+/*Polarity Invert:*/			0
+/*DC Level:*/					twz_intensity*0.5
+/*DC Calibrated:*/				0
+/*Sine Amplitude:*/				"!#EMPTY_STRING#!"
+/*Sine Freq:*/					"!#EMPTY_STRING#!"
+/*Sine Phase:*/					"!#EMPTY_STRING#!"
+/*Sine Burst:*/					0
+/*Sine Calibrated:*/			0
+/*Square Amplitude:*/			5
+/*Square Freq:*/				1/(pgc_flash_ontime+pgc_flash_offtime)
+/*Square Offset:*/				2.5
+/*Square DutyCycle:*/			100*pgc_flash_ontime/(pgc_flash_ontime+pgc_flash_offtime)
+/*Square Phase:*/				0
+/*Square Burst:*/				1
+/*Square Calibrated:*/			0
+/*Preloaded Arb Address:*/		"!#EMPTY_STRING#!"
+/*Preloaded Arb Calibrated:*/	0
+/*Preloaded Arb Burst:*/	0
+/*Scripted Arb Address:*/		C:/Chimera/Chimera-Cryo/Configurations/CryoTweezerLoading/IQmixer_phaseJump_Q.aScript
+/*Scripted Arb Calibrated:*/	0
+END_AGILENT_AWG
+CAMERA_SETTINGS
+/*Control Andor:*/			1
+/*Trigger Mode:*/			External Exposure
+/*Acquisition Mode:*/		Single-Scan
+/*Gain Mode:*/				High dynamic range (16-bit)
+/*Frame Rate:*/				1
+/*Camera Temperature:*/		-5
+/*Number of Exposures:*/	2
+/*Exposure Times:*/			0.02500000037253 0.009999999776483 
+/*Andor Continuous Mode:*/	0
+/*Andor Pics Per Rep:*/		2
+END_CAMERA_SETTINGS
+PICTURE_SETTINGS
+
+/*Color Options:*/ 0 0 0 0 
+/*Threshold Settings:*/ 60 60 100 100 
+/*Software Accumulation (accum all / Number)*/ 0 1 0 1 0 1 0 1 
+END_PICTURE_SETTINGS
+
+CAMERA_IMAGE_DIMENSIONS
+/*Left:*/ 851
+/*Right:*/ 1300
+/*H-Bin:*/ 2
+/*Bottom:*/ 911
+/*Top:*/ 970
+/*V-Bin:*/ 2
+END_CAMERA_IMAGE_DIMENSIONS
+ANDOR_PICTURE_MANAGER
+/*Slider Locs (Min/Max):*/
+60 80
+60 80
+100 150
+100 150
+/*Auto-Scale Pics?*/ 0
+/*Special >Max Color?*/ 0
+/*Special <Min Color?*/ 0
+/*Always Show Grid?*/ 0
+END_ANDOR_PICTURE_MANAGER
+DATA_ANALYSIS
+/*Auto-Threshold Analysis?*/	0
+/*Number of Analysis Grids: */	1
+/*Grid #1:*/ 
+/*Grid Origin X(Bottom-Left Corner Column):*/		0
+/*Grid Origin Y(Bottom-Left Corner Row):*/		0
+/*Grid Width:*/					0
+/*Grid Height:*/				0
+/*Pixel Spacing X:*/			0
+/*Pixel Spacing Y:*/			0
+/*Include Pixels X:*/			0
+/*Include Pixels Y:*/			0
+/*Use External File:*/			1
+/*Grid File Name:*/				atomgrid_1x13_3points_2024-5-15
+BEGIN_ACTIVE_PLOTS
+/*Number of Active Plots:*/ 3
+/*Active Plot #1*/
+/*Plot Name:*/ Histogram-2Pic
+/*Which Grid:*/ 0
+/*Active Plot #2*/
+/*Plot Name:*/ Loadingrate-2Pic
+/*Which Grid:*/ 0
+/*Active Plot #3*/
+/*Plot Name:*/ Survival-2Pic
+/*Which Grid:*/ 0
+END_ACTIVE_PLOTS
+/*Display Grid?*/ 0
+/*Auto Bump Analysis?*/ 0
+/*Bump Param?*/ "!#EMPTY_STRING#!"
+END_DATA_ANALYSIS
+CONFIG_PARAMETERS
+RANGE-INFO
+/*# Scan Dimensions:*/	4
+/*Dim #1:*/ 
+/*Number of Ranges:*/	3
+/*Range #1:*/
+/*Left-Inclusive?*/		1
+/*Right-Inclusive?*/	1
+/*# Variations: */		16
+/*Range #2:*/
+/*Left-Inclusive?*/		1
+/*Right-Inclusive?*/	1
+/*# Variations: */		11
+/*Range #3:*/
+/*Left-Inclusive?*/		1
+/*Right-Inclusive?*/	1
+/*# Variations: */		11
+/*Dim #2:*/ 
+/*Number of Ranges:*/	1
+/*Range #1:*/
+/*Left-Inclusive?*/		1
+/*Right-Inclusive?*/	1
+/*# Variations: */		18
+/*Dim #3:*/ 
+/*Number of Ranges:*/	1
+/*Range #1:*/
+/*Left-Inclusive?*/		1
+/*Right-Inclusive?*/	1
+/*# Variations: */		11
+/*Dim #4:*/ 
+/*Number of Ranges:*/	1
+/*Range #1:*/
+/*Left-Inclusive?*/		1
+/*Right-Inclusive?*/	1
+/*# Variations: */		5
+/*# Variables: */ 		3
+/*Variable #0*/
+/*Name:*/			mot_gradient
+/*Scan-Type:*/		Constant 
+/*Scan-Dimension:*/	0
+/*Initial Value: */	0
+/*Final Value: */	0
+/*Initial Value: */	0
+/*Final Value: */	0
+/*Initial Value: */	0
+/*Final Value: */	0
+/*Constant Value:*/	-7
+/*Scope:*/			global
+
+/*Variable #1*/
+/*Name:*/			bias_x
+/*Scan-Type:*/		Constant 
+/*Scan-Dimension:*/	0
+/*Initial Value: */	-0.5
+/*Final Value: */	1
+/*Initial Value: */	0
+/*Final Value: */	0
+/*Initial Value: */	0
+/*Final Value: */	0
+/*Constant Value:*/	0.386
+/*Scope:*/			global
+
+/*Variable #2*/
+/*Name:*/			bias_y
+/*Scan-Type:*/		Constant 
+/*Scan-Dimension:*/	0
+/*Initial Value: */	-1
+/*Final Value: */	1
+/*Initial Value: */	0
+/*Final Value: */	0
+/*Initial Value: */	0
+/*Final Value: */	0
+/*Constant Value:*/	-0.428
+/*Scope:*/			global
+
+END_CONFIG_PARAMETERS
+TTL_SYSTEM
+/*TTL Name:*/ do1_0 do1_1 opshutter do1_3 dipolepushshutter pixis_trg xyzmotshutter prbshutter prbcoolshutter tarepshutter xymotshutter d1lgmshutter d1lgmprbshutter camerashutter srcmotvalve srcmotvalveenable tweezerhold dipolepushreptrg d1lgmtrg do3_3 mako1 mako2 cooling_ol repump_ol d1lgmeomtrg prbrelayswitch mwtrg mwamptrg ryd420hold ryd1013hold d1lgm_ol d1lgmeom_ol ryd420shutter ryd420trg ryd420expshutter ryd420mako ryd1013trg ryd1013shutter ryd840_ol ryd1013mako tareptrg prbreptrg optrg dipolepushtrg prbtrg scimottrg srcmottrg tweezertrg keysighttrg siglenttrg do7_2 do7_3 do7_4 do7_5 do7_6 do7_7 gmloadtrg do8_1 do8_2 do8_3 do8_4 tweezerintensityswitch ryd420awgchswitch uvlamptrg 
+/*TTL State:*/ 1 0 1 0 1 0 1 1 1 1 1 1 1 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 1 0 0 1 1 0 1 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+END_TTL_SYSTEM
+DAC_SYSTEM
+/*DAC Name:*/ tarepamp prbrepamp opamp dipolepushamp prbamp scimotamp dac0_6 srcmotamp tweezerintensity dipolepushrepamp dac0_10 d1lgmamp d1lgmeomamp ryd420amp ryd1013amp dac0_15 motcoil biascoilx biascoily biascoilz mw_iq_i mw_iq_q dac1_6 electrode1 electrode2 electrode3 electrode4 electrode5 electrode6 electrode7 electrode8 dac1_15 
+/*DAC Value:*/ 10 10 2.6 7 2.2 6 0 10 2.92 10 0 5.5 0 0.18 0.45 0 -7 0.386 -0.428 0.25 2.5 0 -9 2 0 0 0 0 0 0 0 1 
+/*DAC Value Max:*/ 10 10 10 7.3 10 10 10 10 8 10 10 10 9 10 10 8 10 10 10 10 4.5 4.5 10 10 10 10 10 10 10 10 10 10 
+/*DAC Value Min:*/ -9.9 -9.9 -9.9 0 -9.9 -9.9 -9.9 -9.9 -5 -9.9 -9.9 -9.9 0 -9.9 -9.9 0 -9.9 -9.9 -9.9 -9.9 -4.5 -4.5 -9.9 -9.9 -9.9 -9.9 -9.9 -9.9 -9.9 -9.9 -9.9 -9.9 
+/*DAC Description:*/ dac0_0 dac0_1 dac0_2 dac0_3 dac0_4 dac0_5 dac0_6 dac0_7 dac0_8 dac0_9 dac0_10 dac0_11 dac0_12 dac0_13 dac0_14 dac0_15 dac1_0 -5.1_to_+4.5 -4.5_to_+4.4 -4.5_to_+4 -4_to+4 dac1_5 dac1_6 dac1_7 dac1_8 dac1_9 dac1_10 dac1_11 dac1_12 dac1_13 dac1_14 dac1_15 
+END_DAC_SYSTEM
+DDS_SYSTEM
+/*DDS Name:*/ dds0_0 scisrcmot prb ryd420brimrose dds1_0 dds1_1 dds1_2 dds1_3 tarep prbrep d1lgm dds2_3 
+/*DDS Amplitude:*/ 100 100 100 100 100 100 100 100 100 100 100 100 
+/*DDS Amplitude Max:*/ 100 100 100 100 100 100 100 100 100 100 100 100 
+/*DDS Amplitude Min:*/ 0 0 0 0 0 0 0 0 0 0 0 0 
+/*DDS Frequency:*/ 80 80 100 80 80 80 80 80 80 80 80 80 
+/*DDS Frequency Max:*/ 500 500 500 500 500 500 500 500 500 500 500 500 
+/*DDS Frequency Min:*/ 0 0 0 0 0 0 0 0 0 0 0 0 
+/*DDS Description:*/ None None None None None None None None also_for_tweezer also_dipolepushrep also split 
+END_DDS_SYSTEM
+OFFSETLOCK_SYSTEM
+/*OffsetLock Name:*/ ol_cooling ol_repump ol_d1lgm ol_d1_repump ol_ryd840 
+/*OffsetLock Value:*/ 1216 5282 784 6833.682 586 
+/*OffsetLock Description:*/ None resonace None None None 
+END_OFFSETLOCK_SYSTEM
+MICROWAVE_SYSTEM
+/*Control?*/ 1
+/*List Size:*/ 2
+/*Freq:*/ rb87_hfsplitting-50
+/*Power:*/ 15
+/*Freq:*/ mw_scan
+/*Power:*/ 15
+END_MICROWAVE_SYSTEM
+PICOSCREW
+/* Screw-1 Value:*/		0
+/* Screw-2 Value:*/		0
+/* Screw-3 Value:*/		0
+/* Screw-4 Value:*/		0
+/*Control?*/			0
+END_PICOSCREW
+AI-SYSTEM
+/*Query Between Variations?*/ 0
+/*Query Continuously?*/ 0
+/*Average Number:*/ 100
+/*Contiuous Mode Interval:*/ 1000
+/*Ai Names:*/ bias_x bias_z mot_topleft mot_vertical tweezer_intensity_output adc_a5 ryd1013_pickoff adc_a7 bias_y mot_coil mot_topright prb_pickoff op_pickoff ryd420_pickoff adc_b6 adc_b7 
+/*Ai Notes:*/ None None None None None None None None None None None None None None None None 
+/*Channel Ranges*/ 10V 10V 10V 10V 10V 10V 2.5V 10V 10V 5V 10V 10V 10V 2.5V Off 10V 
+END_AI-SYSTEM
+
+CALIBRATION_MANAGER
+/*Auto Cal Checked: */ 0
+/*Calibration Number: */ 13
+/*Calibration Name: */ mot_pwr
+/*Analog Input Chanel: */ mot_topleft
+/*Analog Output Control Chanel: */ scimotamp
+/*Control Values: */ [ 0 9.5 ] 21
+/*Calibration Active: */ 1
+/*TTL Config Size: */ 3
+/*ttl config: */ scimottrg xyzmotshutter xymotshutter 
+/*Analog Output Config Size: */ 0
+/*Analog Output Config: */ 
+/*Data Point Average Number: */ 500
+/*Use Agilent: */0
+/*Which Agilent: */Cryo Siglent
+/*Which Agilent Channel: */1
+/*Recent Calibration Result:*/
+/*Number of Calibration Coefficients: */ 9
+/*Calibration Coefficients: */ 0.1280947 1.96815308 2.52588579 4.23033708 5.43539201 6.98553112 7.94554502 9.1813819 9.49844195 
+/*Calibration BSpline order: */ 5
+/*Calibration BSpline breakpoints: */ 6
+/*Number of Control Vals: */21
+/*Control Vals: */0. 0.475 0.95 1.425 1.9 2.375 2.85 3.325 3.8 4.275 4.75 5.225 5.7 6.175 6.65 7.125 7.6 8.075 8.55 9.025 9.5 
+/*Number of Result Vals: */21
+/*Result Vals: */0.00115909 0.04288522 0.13514756 0.28242805 0.46993439 0.70163335 0.97871822 1.28518815 1.61281838 1.95652699 2.32180486 2.71066317 3.08333934 3.48411451 3.89698538 4.26684347 4.62746361 4.97185095 5.24654378 5.54307505 5.87487289 
+/*Historical Calibration Result:*/
+/*Number of Calibration Coefficients: */ 9
+/*Calibration Coefficients: */ 0.14752011 1.78529475 2.52244282 4.06347178 5.37460955 6.82747142 8.04031598 8.94524798 9.4960773 
+/*Calibration BSpline order: */ 5
+/*Calibration BSpline breakpoints: */ 6
+/*Number of Control Vals: */51
+/*Control Vals: */0. 0.19 0.38 0.57 0.76 0.95 1.14 1.33 1.52 1.71 1.9 2.09 2.28 2.47 2.66 2.85 3.04 3.23 3.42 3.61 3.8 3.99 4.18 4.37 4.56 4.75 4.94 5.13 5.32 5.51 5.7 5.89 6.08 6.27 6.46 6.65 6.84 7.03 7.22 7.41 7.6 7.79 7.98 8.17 8.36 8.55 8.74 8.93 9.12 9.31 9.5 
+/*Number of Result Vals: */51
+/*Result Vals: */0.00581622 0.02149724 0.04750755 0.08371471 0.12984649 0.18564287 0.25083834 0.32567522 0.40938444 0.50101993 0.60081057 0.70818751 0.82226081 0.94506119 1.07440901 1.20953032 1.3509476 1.49671621 1.64852809 1.80462905 1.96596454 2.12842006 2.29489242 2.46584796 2.64015381 2.80560381 2.98246284 3.15746574 3.34192511 3.5210596 3.70726218 3.88989837 4.07671316 4.26067141 4.43685232 4.6103177 4.77749138 4.94642781 5.12060427 5.28193487 5.44286874 5.59304361 5.74451369 5.88602557 6.04572222 6.19634449 6.34578997 6.47960936 6.60593036 6.73294839 6.85042146 
+END_CALIBRATION_MANAGER
+MAKO1_CAM
+/*Mako System Active:*/ 0
+/*Left:*/ 0
+/*Top:*/ 963
+/*Right:*/ 1291
+/*Bottom:*/ 0
+/*H-Bin:*/ 1
+/*V-Bin:*/ 1
+/*Exposure Time:*/ 15000
+/*Frame Rate:*/ 5.000025000125
+/*Raw Gain:*/ 0
+/*Pics Per Rep:*/ 1
+/*Trigger Mode:*/ FixedRate
+END_MAKO1_CAM
+MAKO2_CAM
+/*Mako System Active:*/ 0
+/*Left:*/ 0
+/*Top:*/ 1543
+/*Right:*/ 2063
+/*Bottom:*/ 0
+/*H-Bin:*/ 1
+/*V-Bin:*/ 1
+/*Exposure Time:*/ 14994
+/*Frame Rate:*/ 5.000025000125
+/*Raw Gain:*/ 0
+/*Pics Per Rep:*/ 1
+/*Trigger Mode:*/ FixedRate
+END_MAKO2_CAM
+MAKO3_CAM
+/*Mako System Active:*/ 0
+/*Left:*/ 964
+/*Top:*/ 971
+/*Right:*/ 1015
+/*Bottom:*/ 920
+/*H-Bin:*/ 1
+/*V-Bin:*/ 1
+/*Exposure Time:*/ 15000
+/*Frame Rate:*/ 16.59806134643
+/*Raw Gain:*/ 0
+/*Pics Per Rep:*/ 1
+/*Trigger Mode:*/ Line1
+END_MAKO3_CAM
+MAKO4_CAM
+/*Mako System Active:*/ 0
+/*Left:*/ 968
+/*Top:*/ 763
+/*Right:*/ 1023
+/*Bottom:*/ 704
+/*H-Bin:*/ 1
+/*V-Bin:*/ 1
+/*Exposure Time:*/ 1000
+/*Frame Rate:*/ 16.59806134643
+/*Raw Gain:*/ 0
+/*Pics Per Rep:*/ 1
+/*Trigger Mode:*/ Line1
+END_MAKO4_CAM
+CONFIGURATION_NOTES
+
+END_CONFIGURATION_NOTES
+MAIN_OPTIONS
+/*Randomize Variations?*/ 1
+/*Repetition First Over Variation?*/ 0
+/*In-Experiment Calibration?*/ 0
+/*In-Experiment Calibration Interval*/ 10.00
+/*Atom Threshold for Load Skip*/ 4294967295
+END_MAIN_OPTIONS
+DEBUGGING_OPTIONS
+/*Sleep Time:*/						10
+END_DEBUGGING_OPTIONS
+REPETITIONS
+/*Reps:*/5
+END_REPETITIONS

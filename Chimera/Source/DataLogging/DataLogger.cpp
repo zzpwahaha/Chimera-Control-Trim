@@ -27,13 +27,16 @@ DataLogger::~DataLogger( ){
 }
 
 // this file assumes that h5 is the data_#.h5 file. User should check if incDataSet is on before calling. ???
-void DataLogger::deleteFile(){
+void DataLogger::deleteFile(std::string fileName){
 	if (fileIsOpen){
 		// I'm not actually sure if this should be a prob with h5.
 		thrower ("ERROR: Can't delete current h5 file, the h5 file is open!");
 	}
-	std::string fileAddress = dataFilesBaseLocation + todayFolder + "\\Raw Data\\data_"
-		+ str( currentDataFileNumber ) + ".h5";
+	if (fileName.empty()) {
+		fileName = "data_" + str(currentDataFileNumber);
+	}
+	std::string fileAddress = dataFilesBaseLocation + todayFolder + "\\Raw Data\\"
+		+ fileName + ".h5";
 	int success = DeleteFile(cstr(fileAddress));
 	if (success == false){
 		thrower ("Failed to delete h5 file! Error code: " + str(GetLastError()) + ".\r\n");

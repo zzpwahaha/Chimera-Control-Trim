@@ -25,7 +25,7 @@ t += 10
 
 call setQuantizationField()
 
-t += 100
+t += t_field_settling
 
 
 %%%%%%%%%%%%%% optical pumping into |2,2> state with 2-2'' OP, 1-2'' probe %%%%%%%%%%%
@@ -49,21 +49,21 @@ dac: MW_IQ_Q 0
 dacramp: TweezerIntensity twz_intensity twz_intensity*0.1 10
 t += 10
 
-dac: Ryd1013Amp amplitude_scan 
-on: Ryd1013Trg
+dac: Ryd1013Amp 0.0 %amplitude_scan 
+off: Ryd1013Trg
 t += 1
 
 % 2,2 ->1,1,  7.4075MHz
 pulseon: MWTrg 0.4
 t += 1
 pulseon: MWAmpTrg time_scan %0.0398 %time_scan %0.0836
-t += time_scan+0.010 %time_scan %0.041+0.1 
+t += time_scan+0.1 %0.0398+0.010 %time_scan %0.041+0.1 
 
 t += 1
 off: Ryd1013Trg
 
-pulseon: MWTrg 0.4
-t += 1
+%pulseon: MWTrg 0.4
+%t += 1
 
 %t += 0.1
 %on: Ryd1013Trg

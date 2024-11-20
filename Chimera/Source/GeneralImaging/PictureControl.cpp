@@ -120,7 +120,6 @@ void PictureControl::initialize(std::string name, int width, int height, IChimer
 	connect(pic.plot, &QCustomPlot::mouseMove, [this](QMouseEvent* event) {
 		handleMouse(event); });
 
-
 	layout->addLayout(layout1);
 	layout->addLayout(layout2);
 	layout->addStretch();

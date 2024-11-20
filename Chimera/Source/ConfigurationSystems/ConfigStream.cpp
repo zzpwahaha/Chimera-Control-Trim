@@ -1,17 +1,18 @@
 #include "stdafx.h"
 #include "ConfigStream.h"
 
-std::string ConfigStream::emptyStringTxt= "\"!#EMPTY_STRING#!\"";
+const std::string ConfigStream::emptyStringTxt= "\"!#EMPTY_STRING#!\"";
 
 std::ostream& operator<<(std::ostream& os, const Expression& expr){
 	if (expr.expressionStr == ""){
 		os << ConfigStream::emptyStringTxt;
 	}
 	else{
-		os << expr.expressionStr.c_str ();
+		os << expr.expressionStr.c_str();
 	}
 	return os;
 }
+
 
 ConfigStream::ConfigStream () {
 	this->precision (std::numeric_limits<double>::max_digits10-1);
@@ -59,6 +60,18 @@ ConfigStream& ConfigStream::operator>>(std::string& txt){
 		txt = "";
 	}
 	return *this;
+}
+
+std::string ConfigStream::jumpline()
+{
+	// jump the line, normally this is called after operator>> and it always points to the last whitespace character
+	// so use get() to remove it
+	std::string line;
+	if (peek() == '\n') {
+		get();
+	}
+	std::getline(*this, line, '\n');
+	return line;
 }
 
 std::string ConfigStream::getline (){

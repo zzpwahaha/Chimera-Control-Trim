@@ -13,10 +13,10 @@ class AnalogOutput
 
 public:
 	AnalogOutput ( );
-	void initialize ( IChimeraQtWindow* parent, int whichDac );
+	virtual void initialize ( IChimeraQtWindow* parent, int whichDac );
 	void handleEdit(bool roundToDacPrecision = false);
 	void updateEdit(bool roundToDacPrecision = false);
-	static double roundToDacResolution ( double num );
+	double roundToDacResolution ( double num );
 	double getVal ( bool useDefault );
 	bool eventFilter (QObject* obj, QEvent* event);
 	void setNote ( std::string note );
@@ -27,15 +27,19 @@ public:
 	double checkBound(double dacVal);
 	bool isEdit(QObject* obj);
 	QHBoxLayout* getLayout() const { return layout; }
-private:
+
+	virtual double dacResolution() { return dacResolutionInst; }
+	virtual int numDigits() { return numDigitsInst; }
+
+protected:
 	unsigned dacNum;
 	CQLineEdit* edit;
 	QLabel* label;
 	QHBoxLayout* layout;
 
 public:
-	static constexpr double dacResolution = 20.0 / 0xffff; /*16bit dac*/
-	const int numDigits = static_cast<int>(abs(round(log10(dacResolution) - 0.49)));
+	static constexpr double dacResolutionInst = 20.0 / 0xffff; /*16bit dac*/
+	const int numDigitsInst = static_cast<int>(abs(round(log10(dacResolutionInst) - 0.49)));
 };
 
 //AnalogOutput::numDigits = static_cast<int>(abs(round(log10(dacResolution) - 0.49)));

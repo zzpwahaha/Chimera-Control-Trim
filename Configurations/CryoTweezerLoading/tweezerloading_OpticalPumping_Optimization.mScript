@@ -55,7 +55,7 @@ dac: BiasCoilY -1.065+(-0.053)+(-2.33)*switch_toggle %+(-0.08) %+(-2.33)*switch_
 dac: BiasCoilZ -0.05+(0.012) %+0.033 %-0.04 
 
 
-t += 100 %750
+t += 750 %100 %750
 
 %t += 10
 %%%%%%%%%%%% pump out of F=2 using probe cooling 2-2'' %%%%%%%%%%%

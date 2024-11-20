@@ -35,6 +35,8 @@ public:
 
     void resetFullROI(bool notStartReStart = false);
 
+    QVector<double> getCurrentImageInBuffer();
+
     void manualSaveImage();
 
     void updateStatusBar();

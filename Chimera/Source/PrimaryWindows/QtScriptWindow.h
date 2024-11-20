@@ -73,6 +73,7 @@ class QtScriptWindow : public IChimeraQtWindow{
 		void saveGMoogScript();
 		void saveGMoogScriptAs(IChimeraQtWindow* parent);
 
+		void saveAllScript();
 
 		void updateConfigurationSavedStatus (bool status);
 

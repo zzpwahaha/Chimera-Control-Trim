@@ -382,6 +382,11 @@ OlSystem& QtAuxiliaryWindow::getOlSys() {
 	return olSys;
 }
 
+PicoScrewSystem& QtAuxiliaryWindow::getPsSys()
+{
+	return picoSys;
+}
+
 AiSystem& QtAuxiliaryWindow::getAiSys()
 {
 	return aiSys;

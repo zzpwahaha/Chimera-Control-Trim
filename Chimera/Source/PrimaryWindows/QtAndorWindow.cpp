@@ -273,7 +273,7 @@ void QtAndorWindow::windowOpenConfig (ConfigStream& configFile){
 		andorSettingsCtrl.getConfigSettings().andor.continuousMode);
 }
 
-void QtAndorWindow::abortCameraRun (){
+void QtAndorWindow::abortCameraRun (bool askDelete){
 	int status = andor.queryStatus ();
 	if (ANDOR_SAFEMODE)	{
 		// simulate as if you needed to abort.
@@ -303,7 +303,7 @@ void QtAndorWindow::abortCameraRun (){
 			reportErr (qstr (err.trace ()));
 		}
 
-		if (true/*andor.getAndorRunSettings ().acquisitionMode != AndorRunModes::mode::Video*/){
+		if (askDelete/*andor.getAndorRunSettings ().acquisitionMode != AndorRunModes::mode::Video*/){
 			auto answer = QMessageBox::question(this, qstr("Delete Data?"), qstr("Acquisition Aborted. Delete Data "
 				"file (data_" + str (dataHandler.getDataFileNumber ()) + ".h5) for this run?"));
 			if (answer == QMessageBox::Yes){

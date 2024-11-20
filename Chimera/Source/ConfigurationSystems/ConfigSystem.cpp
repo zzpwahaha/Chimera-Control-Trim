@@ -8,6 +8,7 @@
 #include "PrimaryWindows/QtAndorWindow.h"
 #include "PrimaryWindows/QtScriptWindow.h"
 #include "PrimaryWindows/QtMakoWindow.h"
+#include "PrimaryWindows/QtAnalysisWindow.h"
 #include "PrimaryWindows/QtMainWindow.h"
 #include "ExcessDialogs/openWithExplorer.h"
 #include "ExcessDialogs/saveWithExplorer.h"
@@ -105,6 +106,7 @@ void ConfigSystem::openConfigFromPath( std::string pathToConfig, IChimeraQtWindo
 		win->auxWin->windowOpenConfig(cStream );
 		win->makoWin1->windowOpenConfig(cStream);
 		win->makoWin2->windowOpenConfig(cStream);
+		win->analysisWin->windowOpenConfig(cStream);
 		win->mainWin->windowOpenConfig(cStream );
 		win->scriptWin->updateDoAoDdsNames();
 	}
@@ -217,6 +219,7 @@ void ConfigSystem::saveConfiguration(IChimeraQtWindow* win, bool askOverwrite){
 	win->auxWin->windowSaveConfig(saveStream);
 	win->makoWin1->windowSaveConfig(saveStream);
 	win->makoWin2->windowSaveConfig(saveStream);
+	win->analysisWin->windowSaveConfig(saveStream);
 	win->mainWin->windowSaveConfig(saveStream);
 	std::ofstream configSaveFile (currentProfile.configLocation + configNameToSave + "." + CONFIG_EXTENSION);
 	if (!configSaveFile.is_open ()){

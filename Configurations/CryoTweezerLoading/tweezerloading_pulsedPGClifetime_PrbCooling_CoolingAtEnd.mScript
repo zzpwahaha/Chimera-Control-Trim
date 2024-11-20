@@ -48,7 +48,7 @@ dac: PrbRepAmp pgcprb_twz_rep_amp
 
 % wait 10ms before cooling pulse 
 t += 10
-var repeat_interval 1000
+var repeat_interval 10000
 %var twz_int_lifetime 1.606 %2.92*0.55
 %pgcprb_twz_cool_amp_cal 1.62 VPD, 25ms t_pulse_cool
 % change it to the same as imaging on 07/18/2024

@@ -4,7 +4,6 @@ t = 1
 call CryoMOTEnhancedLoadingLGM()
 call TOF(10)
 
-
 dac: electrode1 (-bias_E_y+bias_E_z)
 dac: electrode2 (-bias_E_x-bias_E_y)
 dac: electrode3 (-bias_E_y-bias_E_z)
@@ -25,9 +24,6 @@ off: UVLampTrg
 call D2InTrapPGCPrb(t_pgc_twz)
 % note the t_pgc_twz should be smaller than 100
 t += 100-t_pgc_twz
-
-off: UVLampTrg
-
 %%%%%%%%%%%%%%  Image TWIZZER  %%%%%%%%%%%%%%%%%%
 % change the field/laser freq parameter here because the previous section is dark, i.e. 100-t_pgc_twz is larger than 4
 call PGCTweezerImaging()
@@ -40,7 +36,7 @@ t += 200 %100 %750
 
 call OpticalPumping22()
 
-
+off: UVLampTrg
 on: Ryd1013Shutter
 
 t += 15
@@ -49,8 +45,8 @@ off: Ryd420ExpShutter
 %on: Ryd1013Shutter
 off: Ryd420AWGchswitch
 ddsfreq: Ryd420Brimrose resonance_scan
-dac: Ryd420Amp 0.3 %0.30 %0.34
-dac: Ryd1013Amp 0.5 %0.55 %0.60 %0.68
+dac: Ryd420Amp 0.18 %0.30 %0.34
+dac: Ryd1013Amp 0.45 %0.55 %0.60 %0.68
 %pulseon: MWTrg 0.4
 
 var IQ_MAX_AMP 2.5
@@ -81,7 +77,7 @@ t += 0.1
 t += 6-1-0.1
 
 var Ryd_pi2_us 0.08
-var Ryd_pi_us 0.16 %0.20 %0.185
+var Ryd_pi_us 0.14 %0.20 %0.185
 
 t += 0.5
 

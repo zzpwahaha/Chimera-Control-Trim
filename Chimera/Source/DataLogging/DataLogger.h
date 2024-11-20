@@ -49,7 +49,7 @@ class DataLogger : public IChimeraSystem {
 		int getCalibrationFileIndex ();
 		static void getDataLocation ( std::string base, std::string& todayFolder, std::string& fullPath );
 		void normalCloseFile();
-		void deleteFile();
+		void deleteFile(std::string fileName = "");
 		int getDataFileNumber( );
 		void assertClosed ();
 		std::string getFullError (H5::Exception& err);

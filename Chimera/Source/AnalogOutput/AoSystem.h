@@ -82,6 +82,7 @@ class AoSystem : public IChimeraSystem
 		//zynq
 		void setDACs();
 		void setSingleDac(unsigned dacNumber, double val); // used for calibration, can not have gui stuff
+		void setSingleDacGui(unsigned dacNumber, double val); // used for external control, can have gui stuff
 		bool IsquickChange() { return quickChange->isChecked(); }
 	
 	signals:

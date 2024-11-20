@@ -147,6 +147,16 @@ void PicoScrewSystem::updateCurrentValues()
 
 }
 
+void PicoScrewSystem::updateCurrentEditValue(unsigned channel, int pos)
+{
+	try {
+		edits[channel]->setText(qstr(pos));
+	}
+	catch (ChimeraError& e) {
+		emit error("Error in updating picoscrew current values\n" + e.qtrace());
+	}
+}
+
 void PicoScrewSystem::updateCtrlEnable()
 {
 	auto ctrl = ctrlButton->isChecked();

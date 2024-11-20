@@ -62,17 +62,19 @@ QtMainWindow::QtMainWindow () :
 	auto numMonitors = qApp->screens ().size ();
 	auto screens = qApp->screens ();
 	unsigned winCount = 0;
-	std::vector<unsigned> monitorNum = { 4,3,5,1,2,0 };
-	/*	scriptWin, andorWin, auxWin, basWin, dmWin, mainWin; */
+	std::vector<unsigned> monitorNum = { 1,0,3,0,0,3,2 };
+	/*	scriptWin, andorWin, auxWin, makoWin1, makoWin2, analysisWin, mainWin; */
 	for (auto* window : winList ()) { 
 		auto screen = qApp->screens ()[monitorNum[winCount++] % numMonitors];
 		window->setWindowState ((windowState () & ~Qt::WindowMinimized) | Qt::WindowActive);
 		window->activateWindow ();
 		//window->setGeometry(0, 0, 1200, 800);
 		window->showMaximized (); 
-		//window->move (screen->availableGeometry ().topLeft());
+		window->move (screen->availableGeometry ().topLeft());
 		//window->resize (screen->availableGeometry ().width (), screen->availableGeometry().height());
 	}
+	andorWin->activateWindow(); // bring to front
+	auxWin->activateWindow();
 	andorWin->refreshPics();
 	andorWin->refreshPics();
 	// hide the splash just before the first window requiring input pops up.
@@ -142,9 +144,9 @@ void QtMainWindow::initializeWidgets (){
 	shortStatus.initialize (this);
 	errorStatus.initialize (this, "ERROR STATUS", { "#FF0000", "#800000"});
 	
-	layout->addWidget(&mainStatus, 0, 0, 5, 1);
-	layout->addWidget(shortStatus.statusLabel(), 5, 0, 1, 2);
-	layout->addWidget(&errorStatus, 0, 1, 5, 1);
+	layout->addWidget(&mainStatus, 0, 0, 6, 1);
+	layout->addWidget(shortStatus.statusLabel(), 6, 0, 1, 2);
+	layout->addWidget(&errorStatus, 0, 1, 6, 1);
 
 	profile.initialize (this); // this and inside it, "handleSelectConfigButton" connect the open config button to openning the config for all windows 
 	notes.initialize (this);

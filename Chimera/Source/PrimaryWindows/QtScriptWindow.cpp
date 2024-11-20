@@ -468,6 +468,15 @@ void QtScriptWindow::saveGMoogScriptAs(IChimeraQtWindow* parent)
 	gigaMoog.gmoogScript.updateScriptNameText(getProfile().configLocation);
 }
 
+void QtScriptWindow::saveAllScript()
+{
+	saveMasterScript();
+	saveGMoogScript();
+	for (auto name : ArbGenEnum::allAgs) {
+		saveArbGenScript(name);
+	}
+}
+
 void QtScriptWindow::windowSaveConfig (ConfigStream& saveFile){
 	scriptInfo<std::string> addresses = getScriptAddresses ();
 	// order matters!

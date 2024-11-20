@@ -11,6 +11,7 @@
 
 ExpThreadWorker::ExpThreadWorker (ExperimentThreadInput* input_, std::atomic<bool>& expRunning) 
 	: experimentIsRunning(expRunning){
+	experimentIsRunning = true; // for tcpclient to know exp is about to run
 	input = std::unique_ptr< ExperimentThreadInput >((ExperimentThreadInput*)input_);
 }
 

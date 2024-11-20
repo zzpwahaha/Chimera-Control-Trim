@@ -29,7 +29,7 @@ t += 10
     dac: BiasCoilY -1.065+(-0.053) 
     dac: BiasCoilZ -0.05+(0.012) 
 
-t += 100
+t += 700
 call PrepareF2Manifold()
 t += 15
 on: Ryd1013Shutter
@@ -39,11 +39,12 @@ on: OPShutter
 %ol: ol_cooling d2_cooling_resonance-10 %resonance_scan
 ol: ol_cooling d2_cooling_resonance-resonance_scan
 ol: ol_repump d2_repump_resonance+(300) % this doesn't matter since TARep is off
-dac: OPAmp {0.1 op_pwr}
+dac: OPAmp {0.10 op_pwr}
 
 dacramp: TweezerIntensity twz_intensity twz_intensity*0.1 10
 t += 10
 on: Ryd1013Trg
+on: Do8_4
 %pulseon: Ryd1013MAKO 0.1
 t += 1 %0.4
 off: TweezerTrg
@@ -61,6 +62,7 @@ off: Ryd1013Trg
 off: Ryd1013Shutter
 on: TARepShutter
 %t += 0.1
+off: Do8_4
 dacramp: TweezerIntensity twz_intensity*0.1 twz_intensity 10
 t += 25
 

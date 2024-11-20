@@ -18,6 +18,7 @@ public:
     void start();
 
     void do_write(const std::string& msg);
+    void do_write(const std::vector<char>& msg);
 
 private:
     void do_read();

@@ -318,6 +318,13 @@ void AoSystem::setSingleDac(unsigned dacNumber, double val)
 	setDACs();
 }
 
+void AoSystem::setSingleDacGui(unsigned dacNumber, double val)
+{
+	outputs[dacNumber].info.currVal = val;
+	outputs[dacNumber].updateEdit();
+	setDACs();
+}
+
 
 void AoSystem::setMinMax(int dacNumber, double minv, double maxv){
 	if (!(minv <= maxv)){

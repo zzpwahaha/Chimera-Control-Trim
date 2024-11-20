@@ -1,9 +1,7 @@
 // created by Mark O. Brown
 #include "stdafx.h"
-
 #include "Scripts/ScriptStream.h"
 #include <ParameterSystem/Expression.h>
-
 #include <algorithm>
 
 ScriptStream::ScriptStream (std::string buf) : std::stringstream (buf) {
@@ -36,16 +34,19 @@ ScriptStream & ScriptStream::operator>>( std::string& outputString ){
 	// stringstream object in order to access the stringstream >> operator
 	// directly. I was having trouble calling the parent class version, not
 	// really sure why.
-	std::string text = str();
-	std::stringstream tempStream( text );
-	// make sure they are at the same place... // this is weird, don't know why I would need to do this. 
-	long long pos = tellg();
-	tempStream.seekg( pos );
+	// I think it is fixed - ZZP 20240815
+	//std::string text = str();
+	//std::stringstream tempStream( text );
+	auto& tempStream = *this;
+	//long long pos = tellg();
+	//tempStream.seekg( pos );
 	std::string tempStr;
 	outputString = "";
 	int unclosedParentheses = 0;
 	do {
-		tempStream >> tempStr;
+		//tempStream >> tempStr;
+		static_cast<std::istream&>(*this)>>tempStr;
+		
 		auto peek_ = tempStream.peek ();
 		auto eof_ = tempStream.eof ();
 		if ( tempStr == "" ){
@@ -76,8 +77,8 @@ ScriptStream & ScriptStream::operator>>( std::string& outputString ){
 			outputString += term;
 		}
 	} while ( unclosedParentheses > 0 && !tempStream.eof() );
-	auto posFin = tempStream.tellg ();
-	seekg(posFin);
+	//auto posFin = tempStream.tellg ();
+	//seekg(posFin);
 	auto peekpos = peek ();
 	lastOutput = outputString;
 	return *this;

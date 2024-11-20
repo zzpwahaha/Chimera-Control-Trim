@@ -126,7 +126,7 @@ namespace commonFunctions{
 			/// File Management 
 			case ID_FILE_SAVEALL: {
 				try {
-					scriptWin->saveMasterScript ();
+					scriptWin->saveAllScript();
 					mainWin->profile.saveConfiguration (win);
 					mainWin->masterConfig.save (mainWin, auxWin, andorWin);
 				}

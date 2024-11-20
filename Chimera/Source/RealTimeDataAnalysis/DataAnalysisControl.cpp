@@ -483,8 +483,7 @@ void DataAnalysisControl::handleSaveConfig( ConfigStream& file ){
 	file << "\nEND_ACTIVE_PLOTS\n";
 	file << "/*Display Grid?*/ " << currentSettings.displayGridOption << "\n";
 	file << "/*Auto Bump Analysis?*/ " << currentSettings.autoBumpOption << "\n";
-	auto bumpParamStr = (currentSettings.bumpParam =="" ? ConfigStream::emptyStringTxt : currentSettings.bumpParam);
-	file << "/*Bump Param?*/ " << bumpParamStr << "\n";
+	file << "/*Bump Param?*/ " << currentSettings.bumpParam << "\n";
 	file << "END_DATA_ANALYSIS\n"; 
 }
 

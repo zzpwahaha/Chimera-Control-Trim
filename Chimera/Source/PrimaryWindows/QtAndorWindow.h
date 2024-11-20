@@ -16,6 +16,7 @@
 #include "ExperimentMonitoringAndStatus/ExperimentTimer.h"
 #include "DataLogging/DataLogger.h"
 #include "GeneralUtilityFunctions/commonFunctions.h"
+#include "ExternalController/CommandModulator.h"
 #include "Rearrangement/atomCruncherInput.h"
 #include "GeneralObjects/commonTypes.h"
 #include "GeneralObjects/Queues.h"
@@ -66,12 +67,11 @@ class QtAndorWindow : public IChimeraQtWindow{
 		std::string getStartMessage ();
 		void handlePictureSettings ();
 		bool cameraIsRunning ();
-		void abortCameraRun ();
+		void abortCameraRun (bool askDelete = true);
 		void assertOff ();
 		void assertDataFileClosed ();
 		void prepareAtomCruncher (AllExperimentInput& input);
 		void writeVolts (unsigned currentVoltNumber, std::vector<float64> data);
-		friend void commonFunctions::handleCommonMessage (int msgID, IChimeraQtWindow* win);
 		bool wantsAutoPause ();
 		std::atomic<bool>* getSkipNextAtomic ();
 		void stopSound ();
@@ -102,6 +102,9 @@ class QtAndorWindow : public IChimeraQtWindow{
 
 		// for programming the camera setting before the experiment run so that the settings are the settings that read back from andor
 		void manualProgramCameraSetting();
+
+		friend void commonFunctions::handleCommonMessage(int msgID, IChimeraQtWindow* win);
+		friend class CommandModulator;
 
 	private:
         Ui::QtAndorWindow* ui;

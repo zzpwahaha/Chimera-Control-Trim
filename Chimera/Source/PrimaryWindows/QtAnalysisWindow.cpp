@@ -11,6 +11,8 @@ QtAnalysisWindow::QtAnalysisWindow(QWidget* parent)
 	: IChimeraQtWindow(parent)
 	, MOTAnalySys(this)
 	, SeqPlotter(this)
+	, staticDac(this)
+	, staticDds(this)
 {
 	setWindowTitle("Analysis Window");
 }
@@ -18,19 +20,43 @@ QtAnalysisWindow::QtAnalysisWindow(QWidget* parent)
 
 std::string QtAnalysisWindow::getSystemStatusString()
 {
-	return std::string();
+	std::string msg;
+	msg += "Static AO System:\n";
+	if (!STATICAO_SAFEMODE) {
+		msg += str("\tStatic AO System is Active at ") + STATICAO_IPADDRESS + ", at port " + str(STATICAO_IPPORT) + "\n";
+		msg += "\t" + staticDac.getDeviceInfo() + "\n";
+	}
+	if (!STATICDDS_SAFEMODE) {
+		msg += str("\tStatic DDS System is Active at port") + STATICDDS_PORT + ", with baudrate " + str(STATICDDS_BAUDRATE) + "\n";
+		msg += "\t" + staticDds.getDeviceInfo() + "\n";
+	}
+	else {
+		msg += "\tStatic AO System is disabled! Enable in \"constants.h\"\n";
+	}
+	return msg;
 }
 
 void QtAnalysisWindow::windowOpenConfig(ConfigStream& configFile)
 {
+	try {
+		ConfigSystem::standardOpenConfig(configFile, staticDac.getConfigDelim(), &staticDac);
+		ConfigSystem::standardOpenConfig(configFile, staticDds.getConfigDelim(), &staticDds);
+	}
+	catch (ChimeraError&) {
+		throwNested("Analysis Window failed to read parameters from the configuration file.");
+	}
 }
 
 void QtAnalysisWindow::windowSaveConfig(ConfigStream& configFile)
 {
+	staticDac.handleSaveConfig(configFile);
+	staticDds.handleSaveConfig(configFile);
 }
 
 void QtAnalysisWindow::fillExpDeviceList(DeviceList& list)
 {
+	list.list.push_back(staticDac.getCore());
+	list.list.push_back(staticDds.getCore());
 }
 
 void QtAnalysisWindow::initializeWidgets()
@@ -63,7 +89,16 @@ void QtAnalysisWindow::initializeWidgets()
 	}
 	layout->addLayout(layoutSeq);
 
-	layout->addStretch(1);
+	QVBoxLayout* layoutAux = new QVBoxLayout(this);
+	layoutAux->setContentsMargins(0, 0, 0, 0);
+	staticDac.initialize();
+	layoutAux->addWidget(&staticDac);
+	staticDds.initialize();
+	layoutAux->addWidget(&staticDds);
+
+	layoutAux->addStretch(1);
+
+	layout->addLayout(layoutAux);
 }
 
 void QtAnalysisWindow::prepareCalcForAcq()

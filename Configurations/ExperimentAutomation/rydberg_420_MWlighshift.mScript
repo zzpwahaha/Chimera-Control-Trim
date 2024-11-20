@@ -1,0 +1,112 @@
+%%%%%%%%%%%%%%%%% Start With 1ms %%%%%%%%%%%%%%%%% 
+t = 1
+%call CryoMOTLoadingPGC()
+call CryoMOTEnhancedLoadingLGM()
+call TOF(10)
+
+%%%%%%%%%%%%%%  PGC in Tweezer %%%%%%%%%%%%%%%%%%
+% change the field/laser freq parameter here because the previous section is TOF and no light is on
+call D2InTrapPGC(t_pgc_twz)
+% note the t_pgc_twz should be smaller than 100
+t += 100-t_pgc_twz
+
+%%%%%%%%%%%%%%  PGC in Tweezer with Probe %%%%%%%%%%%%%%%%%%
+% change the field/laser freq parameter here because the previous section is TOF and no light is on
+call D2InTrapPGCPrb(t_pgc_twz)
+% note the t_pgc_twz should be smaller than 100
+t += 100-t_pgc_twz
+
+%%%%%%%%%%%%%%  Image TWIZZER  %%%%%%%%%%%%%%%%%%% change the field/laser freq parameter here because the previous section is dark, i.e. 100-t_pgc_twz is larger than 4
+call PGCTweezerImaging()
+t += 15 %+500
+
+
+t += 10
+
+call setQuantizationField()
+
+t += t_field_settling
+
+
+%%%%%%%%%%%%%% optical pumping into |2,2> state with 2-2'' OP, 1-2'' probe %%%%%%%%%%%
+call OpticalPumping22()
+t += 1
+
+
+on: Ryd420Shutter
+off: Ryd420ExpShutter
+dac: Ryd420Amp 0.1 %amplitude_scan %0.01 %0.05 %0.34
+t += 15
+
+%%%%%%%%%%%%%%% MW %%%%%%%%%%%
+var mw_rabi_pi2 0.0447 %0.041 %0.041 %0.01 %0.0599 %0.0296
+var IQ_MAX_AMP 2.5
+
+
+dac: MW_IQ_I IQ_MAX_AMP
+dac: MW_IQ_Q 0
+%t += 10  % wait long enough for Windfreak to settle
+dacramp: TweezerIntensity twz_intensity twz_intensity*0.1 10
+t += 10
+
+%%%%420%%%
+t += -10
+on: Ryd420Trg
+t += 3.0
+on: Ryd420Hold
+t += 2.0
+off: Ryd420Trg
+t += 0.1
+on: Ryd420ExpShutter
+t += 10-3-2-0.1
+%%%%420%%%
+
+
+%% 2,2 ->1,1,  7.4075MHz
+%pulseon: MWTrg 0.4
+%t += 1
+%pulseon: MWAmpTrg time_scan %0.0836
+%t += time_scan %0.041+0.1 
+
+pulseon: MWTrg 0.4
+t += 1
+
+t += 0.1
+on: Ryd420Trg
+t += 0.001
+
+pulseon: do8_4 time_scan
+pulseon: MWAmpTrg time_scan %0.082 %0.09
+t += time_scan+0.1 %0.082+0.1 
+
+t += 0.001
+off: Ryd420Trg
+t += 0.001
+off: Ryd420Hold
+
+pulseon: DO1_0 1
+%t += time_scan %10
+t += 1
+dacramp: TweezerIntensity twz_intensity*0.1 twz_intensity 10
+t += 10
+
+
+t += 10
+call StateSelectivePushout()
+
+t += 15
+
+%%%%%%%%%%%%%%  PGC in Tweezer with Probe %%%%%%%%%%%%%%%%%%
+% change the field/laser freq parameter here because the previous section is TOF and no light is on
+call D2InTrapPGCPrb(t_pgc_twz)
+% note the t_pgc_twz should be smaller than 100
+t += 100-t_pgc_twz
+%%%%%%%%%%%%%%% Second Twizzer Image
+% note the previous section should have at least 4 ms dark interval
+call PGCTweezerImaging()
+
+%%%%%%%%%%%%%%  END Sequence  %%%%%%%%%%%%%%%%%%
+t += 10
+call RydbergBeamCameraFootprint()
+t += 10
+pulseon: DO1_0 0.5

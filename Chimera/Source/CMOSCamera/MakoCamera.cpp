@@ -600,11 +600,16 @@ void MakoCamera::resetFullROI(bool notStartReStart)
     }
 }
 
+QVector<double> MakoCamera::getCurrentImageInBuffer()
+{
+    return imgCThread.rawImageDefinite();
+}
+
 void MakoCamera::manualSaveImage()
 {
     // make a copy of the images before save-as dialog appears (image can change during time dialog open)
     QVector<double> imgSave;
-    imgSave = std::move(imgCThread.rawImageDefinite());
+    imgSave = std::move(getCurrentImageInBuffer());
     //imgSave = QVector<double>(m_pImgCThread->rawImage().begin(), m_pImgCThread->rawImage().end());
     auto [imgWidth, imgHeight] = imgCThread.WidthHeight();
 

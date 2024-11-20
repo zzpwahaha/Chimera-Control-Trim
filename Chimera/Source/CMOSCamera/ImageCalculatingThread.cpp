@@ -451,7 +451,7 @@ void ImageCalculatingThread::run()
         m_pProcessingThread->mutex().lock();
         //m_doubleQVector.clear();
         {
-            bool notTimeout = m_pProcessingThread->calcWait().wait(&m_pProcessingThread->mutex(), 2000);
+            bool notTimeout = m_pProcessingThread->calcWait().wait(&m_pProcessingThread->mutex(), 1000);
             if (expRunning && !notTimeout) {
                 qDebug() << "Mako ImageCalculatingThread::run -> see a time out event" << counter;
                 m_pProcessingThread->mutex().unlock();

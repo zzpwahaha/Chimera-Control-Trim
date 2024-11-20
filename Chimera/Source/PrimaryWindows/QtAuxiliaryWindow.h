@@ -73,6 +73,7 @@ class QtAuxiliaryWindow : public IChimeraQtWindow{
 		AoSystem& getAoSys();
 		DdsSystem& getDdsSys();
 		OlSystem& getOlSys();
+		PicoScrewSystem& getPsSys();
 		AiSystem& getAiSys();
 		CalibrationManager& getCalibManager();
 

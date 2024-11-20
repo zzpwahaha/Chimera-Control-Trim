@@ -64,7 +64,7 @@ def MOTLoading(loading_time):
     dac: TARepAmp 10
     dac: SrcMOTAmp 10
     dac: SciMOTAmp mot_load_cool_amp %{mot_load_cool_amp_cal mot_pwr} %6.8 
-    dac: DipolePushAmp 7 %5
+    dac: DipolePushAmp 6.3 %7 %5
     dac: TweezerIntensity twz_intensity %Converison is 38.7mW per 1V Aug/1/2022 
 %    dac: TweezerIntensity twz_dac_intensity-twz_intensityservo_bias % set loading tweezer depth, which is 1mK, 1.7V on PD. Subtract the ofst on servo.
     dac: PrbRepAmp 10

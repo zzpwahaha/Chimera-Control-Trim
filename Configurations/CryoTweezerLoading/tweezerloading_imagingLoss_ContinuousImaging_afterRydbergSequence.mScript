@@ -1,0 +1,189 @@
+%%%%%%%%%%%%%%%%% Start With 1ms %%%%%%%%%%%%%%%%% 
+t = 1
+call CryoMOTEnhancedLoadingLGM()
+call TOF(10)
+
+%%%%%%%%%%%%%%  PGC in Tweezer %%%%%%%%%%%%%%%%%%
+% change the field/laser freq parameter here because the previous section is TOF and no light is on
+call D2InTrapPGC(t_pgc_twz)
+% note the t_pgc_twz should be smaller than 100
+t += 100-t_pgc_twz
+
+call D2InTrapPGCPrb(t_pgc_twz)
+% note the t_pgc_twz should be smaller than 100
+t += 100-t_pgc_twz
+
+%%%%%%%%%%%%%%  Image TWIZZER  %%%%%%%%%%%%%%%%%%
+% change the field/laser freq parameter here because the previous section is dark, i.e. 100-t_pgc_twz is larger than 4
+call PGCTweezerImaging()
+t += 10
+
+
+%%%%%%%%% Rydberg Sequence %%%%%%%%%
+call setQuantizationField()
+t += 750 %100 %750
+call OpticalPumping22()
+on: Ryd1013Shutter
+t += 15
+%on: Ryd420Shutter
+off: Ryd420ExpShutter
+%on: Ryd1013Shutter
+off: Ryd420AWGchswitch
+ddsfreq: Ryd420Brimrose resonance_scan
+dac: Ryd420Amp 0.18 %0.30 %0.34
+dac: Ryd1013Amp 0.45 %0.55 %0.60 %0.68
+
+var IQ_MAX_AMP 2.5
+dac: MW_IQ_I IQ_MAX_AMP
+dac: MW_IQ_Q 0
+pulseon: MWTrg 0.4
+t += 1
+
+dacramp: TweezerIntensity twz_intensity twz_intensity*0.1 10
+t += 10
+
+t += -6
+on: Ryd420Trg
+t += 1.0
+on: Ryd420Hold
+t += 1.0
+off: Ryd420Trg
+t += 0.1
+on: Ryd420ExpShutter
+t += 6-1-1-0.1
+
+t += -6
+on: Ryd1013Trg
+t += 1
+%on: Ryd1013Hold
+t += 0.1
+%off: Ryd1013Trg
+t += 6-1-0.1
+
+var Ryd_pi2_us 0.08
+var Ryd_pi_us 0.15 %0.20 %0.185
+
+t += 0.5
+
+t += 0.001
+
+off: TweezerTrg
+
+t += 0.4/1000 %0.00025
+
+%%%%% Rabi %%%%%%
+on: do8_4 %dummy trigger for picoscope
+%on: Ryd420Trg % scan to get Rabi
+t += time_scan_us/1000 %time_scan_us/1000
+off: Ryd420Trg
+off: do8_4 
+t += 0.4/1000
+on: MWAmpTrg
+t += -0.4/1000
+
+t += 0.25/1000 %0.00025
+on: TweezerTrg
+t += 0.001
+
+t += -0.002
+on: TweezerHold
+pulseon: KeySightTrg 0.01
+t += 0.2
+pulseon: KeySightTrg 0.01
+off: TweezerHold
+t += -0.2
+t += 0.002
+
+t += -0.08
+dacramp: TweezerIntensity twz_intensity*0.1 twz_intensity 0.06
+t += 0.08
+
+t += 0.1
+off: Ryd1013Trg
+off: Ryd1013Hold
+off: Ryd420Shutter
+off: Ryd1013Shutter
+t += 0.5
+off: MWAmpTrg
+
+t += 15
+%%%%%%%%% Rydberg Sequence %%%%%%%%%
+
+%%%%%%%%%%%%%% Prepare for pulsed PGC with Probe %%%%%%%%%%%%%%%
+%% turn off TA path and turn on Prb path for single beam cooling
+on: PrbCoolShutter
+off: TARepShutter
+off: xyMOTShutter
+
+off: PrbShutter
+off: xyzMOTShutter
+
+% wait 20 ms before cooling pulse 
+t += 20
+ol: ol_cooling d2_cooling_prb_resonance-pgc_twz_olcool %probe_olcool
+ol: ol_repump d2_repump_prb_resonance+pgc_twz_olrepump %probe_olrepump
+
+%dac: BiasCoilX pgc_img_bias_x
+%dac: BiasCoilY pgc_img_bias_y
+%dac: BiasCoilZ pgc_img_bias_z
+
+call setZeroField()
+
+%dac: BiasCoilX pgc_twz_bias_x
+%dac: BiasCoilY pgc_twz_bias_y
+%dac: BiasCoilZ pgc_twz_bias_z
+
+
+t += 700
+
+dac: PrbAmp {probe_cool_amp_cal prb_pwr} %{pgcprb_twz_cool_amp_cal prb_pwr} %{probe_cool_amp_cal prb_pwr}
+dac: PrbrepAmp probe_repump_amp %pgcprb_twz_rep_amp %probe_repump_amp
+    t += -t_shutter
+    on: PrbShutter
+    off: xyzMOTShutter
+    off: SciMOTTrg
+    t += t_shutter
+
+    t += -7
+    on: CameraShutter
+    t += 7
+%%%%%%%%%%%%%%% Pulsed PGC 5 times %%%%%%%%%%%%%%%
+%var t_cooling_cycle 2000/repeat_num
+var _wait_time_ 16000 %25*8*40 %20188 %20000 %20090 % 205*98=205*7*14
+var _total_time_btw_img_ 200 %25*8 %100 %98 % 14*7
+on: PrbTrg
+repeat: int(_wait_time_/_total_time_btw_img_) % repeat_num
+%    t += (t_cooling_cycle-5-5-t_pulsed_cool)/2
+%    t += (_wait_time_/repeat_num-5-5-t_twz_imaging)/2
+    pulseon: pixis_trg t_twz_imaging %t_pulsed_cool
+    pulseon: DO1_0 1
+    t += t_twz_imaging %t_pulsed_cool
+    t += _total_time_btw_img_-t_twz_imaging %t_pulsed_cool
+%    t += (_wait_time_/repeat_num-5-5-t_twz_imaging)/2
+end
+off: PrbTrg
+off: PrbShutter 
+
+    off: CameraShutter
+
+% 
+%t += t_wait_before_rr
+%%%%%%%%%%%%% turn probe cool shutter back on %%%%%%%%%%
+on: prbcoolshutter
+on: TARepShutter
+on: xyMOTShutter
+t += 5
+
+%call ReleaseRecapture(t_twz_release)
+t += 10
+call D2InTrapPGCPrb(t_pgc_twz)
+% note the t_pgc_twz should be smaller than 100
+t += 100-t_pgc_twz
+%%%%%%%%%%%%%%% Second Twizzer Image
+% note the previous section should have at least 4 ms dark interval
+%call PGCTweezerImaging()
+
+
+%%%%%%%%%%%%%%  END Sequence  %%%%%%%%%%%%%%%%%%
+t += 100
+pulseon: DO1_0 0.5

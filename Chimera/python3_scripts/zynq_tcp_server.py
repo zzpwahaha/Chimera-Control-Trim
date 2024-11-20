@@ -31,41 +31,46 @@ class zynq_tcp_server:
 	#Function that reads commands from Chimera and passes them to the axis-fifo interface of the Zynq FPGA
 	def chimeraInterface(self):
 		# Create a TCP/IP socket
-		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+			# Set the SO_REUSEADDR option. allows a socket to bind to an address that is in a TIME_WAIT state for quickly restarting a server without having to wait for the previous connection to completely time out.
+			sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+			# Bind the socket to the port
+			server_address = ("10.10.0.2", 8080)
+			print('server starting up on %s port %s' % server_address)
+			sock.bind(server_address)
 
-		# Bind the socket to the port
-		server_address = ("10.10.0.2", 8080)
-		print('server starting up on %s port %s' % server_address)
-		sock.bind(server_address)
+			# Listen for incoming connections
+			sock.listen(1)
+			keep_open = True
+			while keep_open:
+				# Wait for a connection
+				print('waiting for a connection')
+				connection, client_address = sock.accept()
 
-		# Listen for incoming connections
-		sock.listen(1)
+				try:
+					print('connection from', client_address)
 
-		while True:
-			# Wait for a connection
-			print('waiting for a connection')
-			connection, client_address = sock.accept()
-
-			try:
-				print('connection from', client_address)
-
-				# Receive the data in small chunks
-				while True:
-					data = connection.recv(64).decode('utf-8')
-					print('------------------------------------------------------------')
-					print('received "%s"' % data)
-					# print(len(data))
-					if data:
-						self.writeDevice(connection, data)
-						# connection.sendall(data)
-					else:
-						# print 'no more data from', client_address
-						break
-			except socket.error as error:
-				print(error)
-				break
-
-		connection.close()
+					# Receive the data in small chunks
+					while True:
+						data = connection.recv(64).decode('utf-8')
+						print('------------------------------------------------------------')
+						print('received "%s"' % data)
+						# print(len(data))
+						if data=='QUIT':
+							print('QUIT')
+							keep_open = False
+							break
+						if data:
+							self.writeDevice(connection, data)
+							# connection.sendall(data)
+						else:
+							# print 'no more data from', client_address
+							break
+				except socket.error as error:
+					print(error)
+					break
+				finally:
+					connection.close()
 
 	def writeDevice(self, conn, data):
 		data = data.strip('\0')

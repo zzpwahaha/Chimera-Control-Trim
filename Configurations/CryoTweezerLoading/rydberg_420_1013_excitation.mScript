@@ -14,7 +14,7 @@ dac: electrode7 (bias_E_y-bias_E_z)
 dac: electrode8 (-bias_E_x+bias_E_y)
 
 
-on: UVLampTrg
+%on: UVLampTrg
 %%%%%%%%%%%%%%  PGC in Tweezer %%%%%%%%%%%%%%%%%%
 % change the field/laser freq parameter here because the previous section is TOF and no light is on
 call D2InTrapPGC(t_pgc_twz)
@@ -29,10 +29,13 @@ t += 100-t_pgc_twz
 call PGCTweezerImaging()
 
 t += 5
-%on: UVLampTrg
 
 call setQuantizationField()
-t += 200 %100 %750
+t += 700 %100 %750
+
+t += -200
+%on: UVLampTrg
+t += 200
 
 call OpticalPumping22()
 
@@ -76,7 +79,7 @@ t += 0.1
 %off: Ryd1013Trg
 t += 6-1-0.1
 
-var Ryd_pi2_us 0.11
+var Ryd_pi2_us 0.08
 var Ryd_pi_us 0.15 %0.20 %0.185
 
 t += 0.5
@@ -104,9 +107,9 @@ t += -0.4/1000
 %on: Ryd420Trg % scan to get Rabi
 %t += Ryd_pi2_us/1000 %time_scan_us/1000
 %off: Ryd420Trg
-%t += 0.45/1000
-%off: Ryd1013Trg
-%t += -0.45/1000
+%%t += 0.45/1000
+%%off: Ryd1013Trg
+%%t += -0.45/1000
 %%t += 0.25/1000
 %%on: MWAmpTrg
 %%on: TweezerTrg
@@ -118,9 +121,9 @@ t += -0.4/1000
 %%off: MWAmpTrg
 %%off: TweezerTrg
 %%t += 0.25/1000
-%t += 0.05/1000
-%on: Ryd1013Trg
-%t += -0.05/1000
+%%t += 0.05/1000
+%%on: Ryd1013Trg
+%%t += -0.05/1000
 %on: Ryd420Trg % scan to get Rabi
 %t += Ryd_pi2_us/1000 %time_scan_us/1000
 %off: Ryd420Trg
@@ -211,7 +214,8 @@ off: MWAmpTrg
 
 t += 15
 %call StateSelectivePushout()
-
+%call setZeroField()
+%t += 400
 %%%%%%%%%%%%%%  PGC in Tweezer %%%%%%%%%%%%%%%%%%
 % change the field/laser freq parameter here because the previous section is TOF and no light is on
 call D2InTrapPGCPrb(t_pgc_twz)

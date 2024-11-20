@@ -24,8 +24,12 @@ void NoteSystem::handleOpenConfig(ConfigStream& openFile){
 			pos = openFile.tellg ( );
 			std::getline(openFile, tempNote);
 		}
-		if (notes.size() > 2){
-			notes = notes.substr(0, notes.size() - 2);
+		if (size_t end = notes.find_last_not_of("\r\n");
+			end != std::string::npos){
+			notes = notes.substr(0, end + 1);
+		}
+		else {
+			notes = "";
 		}
 		setConfigurationNotes(notes);
 	}

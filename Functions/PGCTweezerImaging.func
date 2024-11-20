@@ -20,10 +20,13 @@ def PGCTweezerImaging():
     t += -7
     on: CameraShutter
     t += 7
-
-    pulseon: pixis_trg t_twz_imaging
+    t += -5
+    on: pixis_trg
+    t += 5
+%    pulseon: pixis_trg t_twz_imaging
     pulseon: PrbTrg t_twz_imaging
     pulseon: DO1_0 1
     t += t_twz_imaging
+    off: pixis_trg
     off: CameraShutter 
     off: PrbShutter 

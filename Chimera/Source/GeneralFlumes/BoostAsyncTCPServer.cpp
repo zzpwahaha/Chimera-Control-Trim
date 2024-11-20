@@ -32,6 +32,23 @@ void TCPSession::do_write(const std::string& msg)
         });
 }
 
+void TCPSession::do_write(const std::vector<char>& msg)
+{
+    auto self(shared_from_this());
+    auto buffer = std::make_shared<std::vector<char>>(msg);
+    boost::asio::async_write(socket_, boost::asio::buffer(*buffer),
+        [this, self, buffer](boost::system::error_code ec, std::size_t /*length*/) {
+            // The lambda handler captures the std::shared_ptr by value, 
+            // extending the lifetime of the buffer until the asynchronous operation completes (handler get called).
+            if (!ec) {}
+            else {
+                std::string err = "Error in writing data to socket with message: " + std::string(buffer->begin(), buffer->end()); +
+                    ". And the error message is " + ec.message();
+                queue_.push({ self, err }); // the callback happen in the server thread, where the TCPSession is created
+            }
+        });
+}
+
 void TCPSession::do_read()
 {
     auto self(shared_from_this());

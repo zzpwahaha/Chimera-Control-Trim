@@ -34,12 +34,16 @@ ol: ol_repump d2_repump_prb_resonance+pgc_twz_olrepump %probe_olrepump
 %dac: BiasCoilX pgc_img_bias_x
 %dac: BiasCoilY pgc_img_bias_y
 %dac: BiasCoilZ pgc_img_bias_z
-dac: BiasCoilX pgc_twz_bias_x
-dac: BiasCoilY pgc_twz_bias_y
-dac: BiasCoilZ pgc_twz_bias_z
 
-dac: PrbAmp {pgcprb_twz_cool_amp_cal prb_pwr} %{probe_cool_amp_cal prb_pwr}
-dac: PrbrepAmp pgcprb_twz_rep_amp %probe_repump_amp
+%dac: BiasCoilX pgc_twz_bias_x
+%dac: BiasCoilY pgc_twz_bias_y
+%dac: BiasCoilZ pgc_twz_bias_z
+
+call setZeroField()
+%t += 100
+
+dac: PrbAmp {probe_cool_amp_cal prb_pwr} %{pgcprb_twz_cool_amp_cal prb_pwr} %{probe_cool_amp_cal prb_pwr}
+dac: PrbrepAmp probe_repump_amp %pgcprb_twz_rep_amp %probe_repump_amp
     t += -t_shutter
     on: PrbShutter
     off: xyzMOTShutter
@@ -57,10 +61,10 @@ on: PrbTrg
 repeat: int(_wait_time_/_total_time_btw_img_) % repeat_num
 %    t += (t_cooling_cycle-5-5-t_pulsed_cool)/2
 %    t += (_wait_time_/repeat_num-5-5-t_twz_imaging)/2
-    pulseon: pixis_trg t_pulsed_cool %t_twz_imaging
+    pulseon: pixis_trg t_twz_imaging %t_pulsed_cool
     pulseon: DO1_0 1
-    t += t_pulsed_cool %t_twz_imaging
-    t += _total_time_btw_img_-t_pulsed_cool %t_twz_imaging
+    t += t_twz_imaging %t_pulsed_cool
+    t += _total_time_btw_img_-t_twz_imaging %t_pulsed_cool
 %    t += (_wait_time_/repeat_num-5-5-t_twz_imaging)/2
 end
 off: PrbTrg

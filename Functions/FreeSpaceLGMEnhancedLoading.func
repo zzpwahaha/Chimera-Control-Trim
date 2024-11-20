@@ -8,22 +8,22 @@ def FreeSpaceLGMEnhancedLoading():
     dacramp: TweezerIntensity twz_intensity twz_intensity*0.88 10
     t += 10
     call FreeSpaceLGM(200) % FreeSpaceLGM start after 10ms for shutter to open, so put it here so that it start right after MOT
-%    t += -200
-%    t += 40
-%    dac: BiasCoilX 2 %shift_bias_x
-%    dac: BiasCoilY -1.5 %shift_bias_y
-%    dac: BiasCoilZ 0.05
-%    t += 40
-%    dac: BiasCoilX 1.5 %shift_bias_x
-%    dac: BiasCoilY -1 %shift_bias_y
-%    dac: BiasCoilZ 0.05
-%    t += 40
-%    dac: BiasCoilX 1.1
-%    dac: BiasCoilY -1.2
-%    dac: BiasCoilZ 0.05
-%    t += 40
-%    dac: BiasCoilX 0.9
-%    dac: BiasCoilY -1.1
-%    dac: BiasCoilZ 0.05
-%    t += 40
+    t += -200
+    t += 40
+    dac: BiasCoilX 2 %shift_bias_x
+    dac: BiasCoilY -1.5 %shift_bias_y
+    dac: BiasCoilZ 0.05
+    t += 40
+    dac: BiasCoilX 1.5 %shift_bias_x
+    dac: BiasCoilY -1 %shift_bias_y
+    dac: BiasCoilZ 0.05
+    t += 40
+    dac: BiasCoilX 1.1
+    dac: BiasCoilY -1.2
+    dac: BiasCoilZ 0.05
+    t += 40
+    dac: BiasCoilX 0.9
+    dac: BiasCoilY -1.1
+    dac: BiasCoilZ 0.05
+    t += 40
     dacramp: TweezerIntensity twz_intensity*0.88  twz_intensity 10

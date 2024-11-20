@@ -3,6 +3,8 @@
 #include "ExperimentThread/ExperimentThreadInput.h"
 #include <RealTimeMOTAnalysis/MOTAnalysisSystem.h>
 #include <ExperimentMonitoringAndStatus/ExperimentSeqPlotter.h>
+#include <StaticAnalogOutput/StaticAoSystem.h>
+#include <StaticDirectDigitalSynthesis/StaticDdsSystem.h>
 
 
 namespace Ui {
@@ -22,6 +24,7 @@ public:
 	void initializeWidgets() override;
 	void fillMasterThreadInput(ExperimentThreadInput* input) override {};
 	//MOTAnalysisControl
+	StaticDdsSystem& getStaticDds() { return staticDds; };
 
 public slots:
 	void prepareCalcForAcq();
@@ -33,6 +36,8 @@ private:
 public:
 	MOTAnalysisSystem MOTAnalySys;
 	ExperimentSeqPlotter SeqPlotter;
+	StaticAoSystem staticDac;
+	StaticDdsSystem staticDds;
 
 private:
 	Ui::QtAnalysisWindow* ui;

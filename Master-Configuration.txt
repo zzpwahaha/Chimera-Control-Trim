@@ -255,7 +255,7 @@ dac1_15
 -9.9 - 10
 0
 dac1_15
-7
+8
 d2_cooling_resonance 1206
 d2_repump_resonance 5282
 d2_cooling_prb_resonance 1226
@@ -263,5 +263,6 @@ d2_repump_prb_resonance 5262
 d1_lgmcooling_resonance 784
 rb87_hfsplitting 6834.682
 t_shutter 10
+t_field_settling 750
 851 1300 2 911 970 2
 0 1

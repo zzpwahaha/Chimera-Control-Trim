@@ -19,10 +19,10 @@ void AnalogOutput::initialize ( IChimeraQtWindow* parent, int whichDac)
 	layout->setContentsMargins(0, 0, 0, 0);
 	
 	label = new QLabel(QString("%1").arg(QString::number(whichDac % size_t(AOGrid::numPERunit)),2), parent);
-	label->setToolTip(cstr(info.name + ": [" + str(info.minVal, numDigits, true) + "," + str(info.maxVal, numDigits, true) + "]" + "\r\n" + info.note));
+	label->setToolTip(qstr(info.name + ": [" + str(info.minVal, numDigits(), true) + "," + str(info.maxVal, numDigits(), true) + "]" + "\r\n" + info.note));
 
 	edit = new CQLineEdit ("0", parent);
-	edit->setToolTip(cstr(info.name + ": [" + str(info.minVal, numDigits, true) + "," + str(info.maxVal, numDigits, true) + "]" + "\r\n" + info.note));
+	edit->setToolTip(qstr(info.name + ": [" + str(info.minVal, numDigits(), true) + "," + str(info.maxVal, numDigits(), true) + "]" + "\r\n" + info.note));
 	edit->installEventFilter (parent);
 	parent->connect (edit, &QLineEdit::textEdited,
 		[this, parent]() {
@@ -128,7 +128,7 @@ double AnalogOutput::getVal ( bool useDefault )
 void AnalogOutput::updateEdit ( bool roundToDacPrecision )
 {
 	std::string valStr = roundToDacPrecision ? str ( roundToDacResolution ( info.currVal ), 13, true, false, true )
-		: str ( info.currVal, numDigits, false, false, false );
+		: str ( info.currVal, numDigits(), false, false, false );
 	int pos = edit->cursorPosition ();
 	edit->setText(valStr.c_str());
 	edit->setCursorPosition (pos);
@@ -141,7 +141,7 @@ void AnalogOutput::setName ( std::string name ){
 	}
 	std::transform ( name.begin ( ), name.end ( ), name.begin ( ), ::tolower );
 	info.name = name;
-	edit->setToolTip(cstr(info.name + ": [" + str(info.minVal, numDigits, true) + "," + str(info.maxVal, numDigits, true) + "]" + "\r\n" + info.note));
+	edit->setToolTip(qstr(info.name + ": [" + str(info.minVal, numDigits(), true) + "," + str(info.maxVal, numDigits(), true) + "]" + "\r\n" + info.note));
 }
 
 
@@ -154,13 +154,13 @@ void AnalogOutput::handleEdit ( bool roundToDacPrecision )
 double AnalogOutput::roundToDacResolution ( double num )
 {
 	//double dacResolution = 10.0 / pow ( 2, 16 );
-	return long ( ( num + dacResolution / 2 ) / dacResolution ) * dacResolution;
+	return long ( ( num + dacResolution() / 2 ) / dacResolution()) * dacResolution();
 }
 
 
 void AnalogOutput::setNote ( std::string note ){
 	info.note = note;
-	edit->setToolTip(cstr(info.name + ": [" + str(info.minVal, numDigits, true) + "," + str(info.maxVal, numDigits, true) + "]" + "\r\n" + info.note));
+	edit->setToolTip(qstr(info.name + ": [" + str(info.minVal, numDigits(), true) + "," + str(info.maxVal, numDigits(), true) + "]" + "\r\n" + info.note));
 }
 
 void AnalogOutput::disable ( ){

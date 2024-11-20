@@ -5,6 +5,7 @@ def RydbergBeamCameraFootprint():
     off: Ryd420Trg
     off: Ryd1013Trg
     off: Ryd420ExpShutter
+    off: Ryd1013Hold
     t += 10
     t += -5
     on: Ryd420Trg

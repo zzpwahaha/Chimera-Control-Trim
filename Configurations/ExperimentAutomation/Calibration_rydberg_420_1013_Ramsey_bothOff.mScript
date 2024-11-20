@@ -1,0 +1,206 @@
+%%%%%%%%%%%%%%%%% Start With 1ms %%%%%%%%%%%%%%%%% 
+t = 1
+%call CryoMOTLoadingPGC()
+call CryoMOTEnhancedLoadingLGM()
+call TOF(10)
+
+dac: electrode1 (-bias_E_y+bias_E_z)
+dac: electrode2 (-bias_E_x-bias_E_y)
+dac: electrode3 (-bias_E_y-bias_E_z)
+dac: electrode4 (bias_E_x-bias_E_y)
+dac: electrode5 (bias_E_y+bias_E_z)
+dac: electrode6 (bias_E_x+bias_E_y)
+dac: electrode7 (bias_E_y-bias_E_z)
+dac: electrode8 (-bias_E_x+bias_E_y)
+
+
+on: UVLampTrg
+%%%%%%%%%%%%%%  PGC in Tweezer %%%%%%%%%%%%%%%%%%
+% change the field/laser freq parameter here because the previous section is TOF and no light is on
+call D2InTrapPGC(t_pgc_twz)
+% note the t_pgc_twz should be smaller than 100
+t += 100-t_pgc_twz
+off: UVLampTrg
+call D2InTrapPGCPrb(t_pgc_twz)
+% note the t_pgc_twz should be smaller than 100
+t += 100-t_pgc_twz
+%%%%%%%%%%%%%%  Image TWIZZER  %%%%%%%%%%%%%%%%%%
+% change the field/laser freq parameter here because the previous section is dark, i.e. 100-t_pgc_twz is larger than 4
+call PGCTweezerImaging()
+
+t += 5
+on: UVLampTrg
+
+call setQuantizationField()
+t += t_field_settling %750 %100 %750
+
+call OpticalPumping22()
+
+off: UVLampTrg
+on: Ryd1013Shutter
+
+t += 15
+%on: Ryd420Shutter
+off: Ryd420ExpShutter
+%on: Ryd1013Shutter
+off: Ryd420AWGchswitch
+ddsfreq: Ryd420Brimrose resonance_scan
+dac: Ryd420Amp 0.18 %0.30 %0.34
+dac: Ryd1013Amp 0.45 %0.55 %0.60 %0.68
+%pulseon: MWTrg 0.4
+
+var IQ_MAX_AMP 2.5
+dac: MW_IQ_I IQ_MAX_AMP
+dac: MW_IQ_Q 0
+pulseon: MWTrg 0.4
+t += 1
+
+dacramp: TweezerIntensity twz_intensity twz_intensity*0.1 10
+t += 10
+
+t += -6
+on: Ryd420Trg
+t += 1.0
+on: Ryd420Hold
+t += 1.0
+off: Ryd420Trg
+t += 0.1
+on: Ryd420ExpShutter
+t += 6-1-1-0.1
+
+t += -6
+on: Ryd1013Trg
+t += 1
+%on: Ryd1013Hold
+t += 0.1
+%off: Ryd1013Trg
+t += 6-1-0.1
+
+var Ryd_pi2_us 0.09
+var Ryd_pi_us 0.15 %0.20 %0.185
+
+t += 0.5
+
+t += 0.001
+
+off: TweezerTrg
+
+t += 0.4/1000 %0.00025
+
+%%%%% Rabi %%%%%%
+%on: do8_4 %dummy trigger for picoscope
+%on: Ryd420Trg % scan to get Rabi
+%t += time_scan_us/1000 %time_scan_us/1000
+%off: Ryd420Trg
+%off: do8_4 
+%t += 0.4/1000
+%on: MWAmpTrg
+%t += -0.4/1000
+
+t += -0.4/1000 %0.00025
+on: Ryd1013Hold
+t += 0.4/1000 %0.00025
+on: do8_4 %dummy trigger for picoscope
+on: Ryd420Trg % scan to get Rabi
+t += Ryd_pi2_us/1000 %time_scan_us/1000
+off: Ryd420Trg
+t += 0.45/1000
+off: Ryd1013Trg
+t += -0.45/1000
+%t += 0.25/1000
+%on: MWAmpTrg
+%on: TweezerTrg
+t += time_scan_us/1000/2
+%on: Ryd420Trg % scan to get Rabi
+%t += Ryd_pi_us/1000 %time_scan_us/1000
+%off: Ryd420Trg
+t += time_scan_us/1000/2
+%off: MWAmpTrg
+%off: TweezerTrg
+%t += 0.25/1000
+t += 0.0/1000
+on: Ryd1013Trg
+t += -0.0/1000
+on: Ryd420Trg % scan to get Rabi
+t += Ryd_pi2_us/1000 %time_scan_us/1000
+off: Ryd420Trg
+off: do8_4 %dummy trigger for picoscope
+t += 0.4/1000
+on: MWAmpTrg
+t += -0.4/1000
+
+
+%on: do8_4 %dummy trigger for picoscope
+%repeat: 6 % scan to get pi2 time
+%on: Ryd420Trg
+%t += time_scan_us/1000 % scan from 70 to 100 ns
+%off: Ryd420Trg
+%t += 0.4/1000
+%end
+%off: do8_4 %dummy trigger for picoscope
+%t += 0.4/1000
+%on: MWAmpTrg
+%t += -0.4/1000
+
+%on: do8_4
+%repeat: 5 % scan to get pi time
+%on: Ryd420Trg
+%t += time_scan_us/1000 % scan from 70 to 100 ns
+%off: Ryd420Trg
+%t += 0.0004
+%end
+%off: do8_4
+
+
+t += 0.25/1000 %0.00025
+on: TweezerTrg
+t += 0.001
+
+t += -0.002
+on: TweezerHold
+pulseon: KeySightTrg 0.01
+t += 0.2
+pulseon: KeySightTrg 0.01
+off: TweezerHold
+t += -0.2
+t += 0.002
+
+t += -0.08
+dacramp: TweezerIntensity twz_intensity*0.1 twz_intensity 0.06
+t += 0.08
+
+%pulseon: MWAmpTrg 0.1
+t += 0.1
+off: Ryd1013Trg
+off: Ryd1013Hold
+off: Ryd420Shutter
+off: Ryd1013Shutter
+t += 0.5
+off: MWAmpTrg
+%dacramp: TweezerIntensity twz_intensity*0.1 twz_intensity 10
+%t += 10
+
+t += 15
+%call StateSelectivePushout()
+
+%%%%%%%%%%%%%%  PGC in Tweezer %%%%%%%%%%%%%%%%%%
+% change the field/laser freq parameter here because the previous section is TOF and no light is on
+call D2InTrapPGCPrb(t_pgc_twz)
+% note the t_pgc_twz should be smaller than 100
+t += 100-t_pgc_twz
+
+off: UVLampTrg
+t += 5
+%%%%%%%%%%%%%%  Image TWIZZER  %%%%%%%%%%%%%%%%%%
+% change the field/laser freq parameter here because the previous section is dark, i.e. 100-t_pgc_twz is larger than 4
+t += -10
+call PGCTweezerImaging()
+
+t += 10
+call RydbergBeamCameraFootprint()
+
+t += 5
+%pulseon: UVLampTrg 5
+%%%%%%%%%%%%%%  END Sequence  %%%%%%%%%%%%%%%%%%
+t += 10
+pulseon: DO1_0 0.5
