@@ -1,0 +1,9 @@
+%var IQ_MAX_AMP 2.5
+%%var phase_scan 2
+%hold 0 1 onceWaitTrig #
+%hold IQ_MAX_AMP*sin(phase_scan) 2 onceWaitTrig #
+
+var dummy_420_amp 0.10
+hold 0 0.001 onceWaitTrig #
+hold dummy_420_amp 0.001 onceWaitTrig #
+hold 0 0.001 onceWaitTrig #

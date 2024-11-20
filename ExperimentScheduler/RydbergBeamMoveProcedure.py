@@ -69,7 +69,7 @@ def extract_beam_position_on_mako(exp : ExperimentProcedure, mako_idx:int, avera
                 id_avg += -1
                 print("extract_beam_position_on_mako: wrong image size, let it go, raw_img.shape", raw_img.shape)
                 continue
-            img = exp.getMakoImage(mako_idx=mako_idx).reshape(h,w)
+            img = raw_img.reshape(h,w)
             # horizontal 
             x,y = np.arange(w, dtype=float), img.sum(axis=0)
             punc, p, fit_result_str = da.ah.fit_data(x,y, fit_function=da.gaussian, use_unc=False)
@@ -166,8 +166,8 @@ def move_beam_to_target(exp: ExperimentProcedure, mako_idx: int, pico_idx: tuple
     return False
 
 
-RYDBERG_BEAM_420_POSITION = (16.12,28.30) #(14.81,28.74) #(16.48,28.57) #(16.95,28.71)
-RYDBERG_BEAM_1013_POSITION = (31.31,26.33) #(31.89,26.19) #(32.02,25.56) #(33.65,26.38)
+RYDBERG_BEAM_420_POSITION = (16.21,28.80) #(15.75,27.46) #(16.12,28.30) #(14.81,28.74) #(16.48,28.57) #(16.95,28.71)
+RYDBERG_BEAM_1013_POSITION = (32.31, 26.02) #(31.88, 27.06) #(31.31,26.33) #(31.89,26.19) #(32.02,25.56) #(33.65,26.38)
 
 if __name__=="__main__":
     exp = ExperimentProcedure()

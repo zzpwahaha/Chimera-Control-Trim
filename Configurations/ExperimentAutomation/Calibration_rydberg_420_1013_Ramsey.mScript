@@ -58,15 +58,15 @@ t += 1
 dacramp: TweezerIntensity twz_intensity twz_intensity*0.1 10
 t += 10
 
-t += -6
+t += -10
 on: Ryd420Trg
-t += 1.0
+t += 5.0
 on: Ryd420Hold
 t += 1.0
 off: Ryd420Trg
 t += 0.1
 on: Ryd420ExpShutter
-t += 6-1-1-0.1
+t += 10-5-1-0.1
 
 t += -6
 on: Ryd1013Trg
@@ -97,30 +97,20 @@ t += 0.4/1000 %0.00025
 %on: MWAmpTrg
 %t += -0.4/1000
 
-t += -0.4/1000 %0.00025
-on: Ryd1013Hold
-t += 0.4/1000 %0.00025
+%t += -0.4/1000 %0.00025
+%on: Ryd1013Hold
+%t += 0.4/1000 %0.00025
 on: do8_4 %dummy trigger for picoscope
 on: Ryd420Trg % scan to get Rabi
 t += Ryd_pi2_us/1000 %time_scan_us/1000
 off: Ryd420Trg
-%t += 0.45/1000
-%off: Ryd1013Trg
-%t += -0.45/1000
-%t += 0.25/1000
-%on: MWAmpTrg
-%on: TweezerTrg
+
 t += time_scan_us/1000/2
 %on: Ryd420Trg % scan to get Rabi
 %t += Ryd_pi_us/1000 %time_scan_us/1000
 %off: Ryd420Trg
 t += time_scan_us/1000/2
-%off: MWAmpTrg
-%off: TweezerTrg
-%t += 0.25/1000
-%t += 0.05/1000
-%on: Ryd1013Trg
-%t += -0.05/1000
+
 on: Ryd420Trg % scan to get Rabi
 t += Ryd_pi2_us/1000 %time_scan_us/1000
 off: Ryd420Trg
@@ -128,28 +118,6 @@ off: do8_4 %dummy trigger for picoscope
 t += 0.4/1000
 on: MWAmpTrg
 t += -0.4/1000
-
-
-%on: do8_4 %dummy trigger for picoscope
-%repeat: 6 % scan to get pi2 time
-%on: Ryd420Trg
-%t += time_scan_us/1000 % scan from 70 to 100 ns
-%off: Ryd420Trg
-%t += 0.4/1000
-%end
-%off: do8_4 %dummy trigger for picoscope
-%t += 0.4/1000
-%on: MWAmpTrg
-%t += -0.4/1000
-
-%on: do8_4
-%repeat: 5 % scan to get pi time
-%on: Ryd420Trg
-%t += time_scan_us/1000 % scan from 70 to 100 ns
-%off: Ryd420Trg
-%t += 0.0004
-%end
-%off: do8_4
 
 
 t += 0.25/1000 %0.00025

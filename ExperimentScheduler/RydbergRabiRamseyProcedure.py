@@ -23,7 +23,7 @@ exp.open_configuration("\\ExperimentAutomation\\" + config_name)
 
 # analysis grid
 window = [0, 0, 200, 30]
-thresholds = 65
+thresholds = 100
 binnings = np.linspace(0, 240, 241)
 analysis_locs = da.DataAnalysis(year='2024', month='August', day='26', data_name='data_1', 
                                 window=window, thresholds=70, binnings=binnings)
@@ -36,9 +36,9 @@ def resonace_scan(exp_idx, timeout_control = {'use':False, 'timeout':600}):
     config_file.modify_parameter("REPETITIONS", "Reps:", str(4))
     for variable in config_file.config_param.variables:
         config_file.config_param.update_variable(variable.name, scan_type="Constant", scan_dimension=0)    
-    config_file.config_param.update_scan_dimension(0, new_ranges=[ScanRange(index=0,left_inclusive=True, right_inclusive=True, variations=33)])
+    config_file.config_param.update_scan_dimension(0, new_ranges=[ScanRange(index=0,left_inclusive=True, right_inclusive=True, variations=26)])
     config_file.config_param.update_variable("resonance_scan", scan_type="Variable", new_initial_values=[73], new_final_values=[87])
-    config_file.config_param.update_variable("time_scan_us", constant_value = 0.15)
+    config_file.config_param.update_variable("time_scan_us", constant_value = 0.18)
     config_file.save()
     
     # Setup experiment details
@@ -99,13 +99,16 @@ def rabi_scan(exp_idx, timeout_control = {'use':False, 'timeout':600}):
     #                                          new_final_values=[0.61,1.9,3.4,4.9])
 
     config_file.config_param.update_scan_dimension(0, new_ranges=[
-        ScanRange(index=0,left_inclusive=True, right_inclusive=True, variations=16),
+        ScanRange(index=0,left_inclusive=True, right_inclusive=True, variations=17),
         ScanRange(index=1,left_inclusive=True, right_inclusive=True, variations=11),
         ScanRange(index=2,left_inclusive=True, right_inclusive=True, variations=11)
         ])
     config_file.config_param.update_variable("time_scan_us", scan_type="Variable", 
-                                             new_initial_values=[0.01,2.2,4.5], 
-                                             new_final_values=[0.61,2.6,4.9])
+                                             new_initial_values=[0.01,2.6,4.5], 
+                                             new_final_values=[0.65,3.0,4.9])
+    # config_file.config_param.update_variable("time_scan_us", scan_type="Variable", 
+    #                                          new_initial_values=[0.01,1.7,3.6], 
+    #                                          new_final_values=[0.49,2.0,3.9])
 
 
     config_file.save()
@@ -131,8 +134,8 @@ def pi_pi2_time_scan(exp_idx, timeout_control = {'use':False, 'timeout':600}):
     config_file.modify_parameter("REPETITIONS", "Reps:", str(5))
     for variable in config_file.config_param.variables:
         config_file.config_param.update_variable(variable.name, scan_type="Constant", scan_dimension=0)    
-    config_file.config_param.update_scan_dimension(0, new_ranges=[ScanRange(index=0,left_inclusive=True, right_inclusive=True, variations=26)])
-    config_file.config_param.update_variable("time_scan_us", scan_type="Variable", new_initial_values=[0.01], new_final_values=[0.26])
+    config_file.config_param.update_scan_dimension(0, new_ranges=[ScanRange(index=0,left_inclusive=True, right_inclusive=True, variations=31)])
+    config_file.config_param.update_variable("time_scan_us", scan_type="Variable", new_initial_values=[0.01], new_final_values=[0.31])
     config_file.save()
     
     # Setup experiment details
@@ -151,7 +154,7 @@ def pi_pi2_time_scan(exp_idx, timeout_control = {'use':False, 'timeout':600}):
     #                         annotate_title = f"RABI-SCAN-{exp_idx}", annotate_note=" ")
     # rabi_guess = rabi_analysis.analyze_data(function = da.decaying_cos)
     # rabi_guess = da.ah.nominal(rabi_guess)
-    RABI_GUESS = [1,5,4,0,0.5]
+    RABI_GUESS = [1,5,4.35,0,0.5]
     data_analysis = da.DataAnalysis(YEAR, MONTH, DAY, exp_name, maximaLocs=analysis_locs.maximaLocs,
                             window=window, thresholds=thresholds, binnings=binnings, 
                             annotate_title = exp_name, annotate_note=" ")
@@ -279,6 +282,30 @@ def ramsey_scan_echo(exp_idx, timeout_control = {'use':False, 'timeout':600}):
                             annotate_title = exp_name, annotate_note=" ")
     return
 
+def rydberg_T1(exp_idx, timeout_control = {'use':False, 'timeout':600}):
+    script_name = "Calibration_rydberg_420_1013_T1.mScript"
+    config_file.modify_parameter("REPETITIONS", "Reps:", str(5))
+    for variable in config_file.config_param.variables:
+        config_file.config_param.update_variable(variable.name, scan_type="Constant", scan_dimension=0)    
+    config_file.config_param.update_scan_dimension(0, new_ranges=[
+        ScanRange(index=0,left_inclusive=True, right_inclusive=True, variations=21),])
+    config_file.config_param.update_variable("time_scan_us", scan_type="Variable", new_initial_values=[0.5], new_final_values=[7.5])
+    config_file.save()
+    
+    YEAR, MONTH, DAY = today()
+    exp_name = f"RYDBERG-T1-{exp_idx}"
+    exp.open_configuration("\\ExperimentAutomation\\" + config_name)
+    exp.open_master_script("\\ExperimentAutomation\\" + script_name)
+    exp.run_experiment(exp_name)
+
+    # Monitor experiment status
+    experiment_monitoring(exp=exp, timeout_control=timeout_control)
+
+    data_analysis = da.DataAnalysis(YEAR, MONTH, DAY, exp_name, maximaLocs=analysis_locs.maximaLocs,
+                            window=window, thresholds=thresholds, binnings=binnings, 
+                            annotate_title = exp_name, annotate_note=" ")
+    return
+
 def ramsey_scan_bothOff(exp_idx, timeout_control = {'use':False, 'timeout':600}):
     script_name = "Calibration_rydberg_420_1013_Ramsey_bothOff.mScript"
     config_file.modify_parameter("REPETITIONS", "Reps:", str(7))
@@ -358,6 +385,12 @@ def calibration(exp_idx):
         ramsey_scan_echo(exp_idx=exp_idx, timeout_control = {'use':True, 'timeout':1200})
         sleep(3)
 
+        _calibration()
+        recenter_beams()
+        exp.hardware_controller.restart_zynq_control()
+        rydberg_T1(exp_idx=exp_idx, timeout_control = {'use':True, 'timeout':1200})
+        sleep(3)
+
         recenter_beams()
         exp.hardware_controller.restart_zynq_control()
         ryd_1013_mw_lightshift_scan(exp_idx=exp_idx, timeout_control = {'use':True, 'timeout':1200})
@@ -373,7 +406,7 @@ def calibration(exp_idx):
 
 
 def procedure():
-    for idx in np.arange(50):
+    for idx in np.arange(100):
         # if idx<=1: continue
         print(f"Running experiment sets number {idx}")
         if idx != 0:

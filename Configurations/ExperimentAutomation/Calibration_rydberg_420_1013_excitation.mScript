@@ -113,8 +113,8 @@ off: TweezerHold
 %t += 0.002
 
 t += -0.08
-dacramp: TweezerIntensity twz_intensity*0.1 twz_intensity 0.06
-t += 0.08
+dacramp: TweezerIntensity twz_intensity*0.1 twz_intensity 10 %0.06
+t += 10+0.08
 
 %pulseon: MWAmpTrg 0.1
 t += 0.1
@@ -152,4 +152,5 @@ t += 5
 %pulseon: UVLampTrg 5
 %%%%%%%%%%%%%%  END Sequence  %%%%%%%%%%%%%%%%%%
 t += 10
+%pulseon: KeySightTrg 0.01
 pulseon: DO1_0 0.5

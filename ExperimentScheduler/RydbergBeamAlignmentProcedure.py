@@ -9,7 +9,7 @@ exp = ExperimentProcedure()
 
 # analysis grid
 window = [0, 0, 200, 30]
-thresholds = 65
+thresholds = 100
 binnings = np.linspace(0, 240, 241)
 analysis_locs = da.DataAnalysis(year='2024', month='August', day='26', data_name='data_1', 
                                 window=window, thresholds=70, binnings=binnings)
