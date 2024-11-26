@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -130,6 +130,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\ElliptecRotationStage\ElliptecSystem.cpp" />
+    <ClCompile Include="Source\ElliptecRotationStage\ElliptecCore.cpp" />
+    <ClCompile Include="Source\ElliptecRotationStage\ElliptecFlume.cpp" />
     <ClCompile Include="Source\GeneralFlumes\BoostSyncSerial.cpp" />
     <ClCompile Include="Source\GeneralFlumes\BoostSyncUDP.cpp" />
     <ClCompile Include="Source\GeneralFlumes\BoostSyncTCP.cpp" />
@@ -196,6 +199,10 @@
     <ClCompile Include="Source\StaticDirectDigitalSynthesis\StaticDdsCore.cpp" />
     <ClCompile Include="Source\StaticDirectDigitalSynthesis\StaticDDSFlume.cpp" />
     <ClCompile Include="Source\StaticDirectDigitalSynthesis\StaticDdsSystem.cpp" />
+    <QtMoc Include="Source\ElliptecRotationStage\ElliptecCore.h" />
+    <QtMoc Include="Source\ElliptecRotationStage\ElliptecSystem.h" />
+    <ClInclude Include="Source\ElliptecRotationStage\ElliptecFlume.h" />
+    <ClInclude Include="Source\ElliptecRotationStage\ElliptecSettings.h" />
     <ClInclude Include="Source\GeneralFlumes\BoostSyncSerial.h" />
     <ClInclude Include="Source\GeneralFlumes\BoostSyncUDP.h" />
     <ClInclude Include="Source\GeneralFlumes\BoostSyncTCP.h" />
@@ -234,8 +241,8 @@
     <QtMoc Include="Source\ExternalController\CommandModulator.h" />
     <ClInclude Include="Source\GeneralFlumes\BoostAsyncTCPServer.h" />
     <ClInclude Include="Source\PicoScrew\NewportUSB.h" />
-    <ClInclude Include="Source\PicoScrew\PicoScrewSystem.h" />
-    <ClInclude Include="Source\PicoScrew\PicoScrewCore.h" />
+    <QtMoc Include="Source\PicoScrew\PicoScrewSystem.h" />
+    <QtMoc Include="Source\PicoScrew\PicoScrewCore.h" />
     <ClInclude Include="Source\PicoScrew\PicoScrewFlume.h" />
     <QtMoc Include="Source\Andor\AndorCameraThreadImageGrabber.h" />
     <ClInclude Include="Source\Rearrangement\RearrangeGenerator.h" />

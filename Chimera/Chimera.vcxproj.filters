@@ -555,6 +555,15 @@
     <ClCompile Include="Source\StaticDirectDigitalSynthesis\StaticDdsSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ElliptecRotationStage\ElliptecFlume.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ElliptecRotationStage\ElliptecCore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ElliptecRotationStage\ElliptecSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="3rd_Party\qcustomplot\qcustomplot.h">
@@ -771,6 +780,18 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Source\StaticDirectDigitalSynthesis\StaticDdsSystem.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ElliptecRotationStage\ElliptecCore.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ElliptecRotationStage\ElliptecSystem.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\PicoScrew\PicoScrewCore.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\PicoScrew\PicoScrewSystem.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -1180,12 +1201,6 @@
     <ClInclude Include="Source\GeneralFlumes\WinSerialFlume.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\PicoScrew\PicoScrewSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\PicoScrew\PicoScrewCore.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\PicoScrew\PicoScrewFlume.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1244,6 +1259,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\StaticDirectDigitalSynthesis\StaticDDSFlume.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ElliptecRotationStage\ElliptecFlume.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ElliptecRotationStage\ElliptecSettings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

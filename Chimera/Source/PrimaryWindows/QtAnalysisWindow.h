@@ -5,6 +5,7 @@
 #include <ExperimentMonitoringAndStatus/ExperimentSeqPlotter.h>
 #include <StaticAnalogOutput/StaticAoSystem.h>
 #include <StaticDirectDigitalSynthesis/StaticDdsSystem.h>
+#include <ElliptecRotationStage/ElliptecSystem.h>
 
 
 namespace Ui {
@@ -38,6 +39,7 @@ public:
 	ExperimentSeqPlotter SeqPlotter;
 	StaticAoSystem staticDac;
 	StaticDdsSystem staticDds;
+	ElliptecSystem elliptec;
 
 private:
 	Ui::QtAnalysisWindow* ui;

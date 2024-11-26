@@ -138,6 +138,10 @@
 	const std::string STATICDDS_PORT = "COM12";
 	const unsigned int STATICDDS_BAUDRATE = 115200;
 
+	//Elliptec rotation stage
+	const bool ELLIPTEC_SAFEMODE = false;
+	const std::string ELLIPTEC_PORT = "COM3";
+
 	//Temperature Monitor
 	const bool TEMPMON_SAFEMODE = false;
 	const unsigned TEMPMON_NUMBER = 5;
