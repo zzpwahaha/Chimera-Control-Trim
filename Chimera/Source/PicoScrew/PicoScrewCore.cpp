@@ -71,6 +71,8 @@ void PicoScrewCore::programVariation(unsigned variation, std::vector<parameterTy
 			moveTo(ch, expSettings.screwPos[ch].getValue(variation));
 			for (auto idx : range(2000)) {
 				if (motionDone(ch)) {
+					int pos = motorPosition(ch);
+					emit currentPosition(ch, pos);
 					break;
 				}
 				Sleep(5); // move ~ 10 steps

@@ -14,6 +14,7 @@ struct picoScrewSettings
 
 class PicoScrewCore : public IDeviceCore
 {
+	Q_OBJECT
 public:
 	// THIS CLASS IS NOT COPYABLE.
 	PicoScrewCore& operator=(const PicoScrewCore&) = delete;
@@ -41,6 +42,9 @@ public:
 	const bool safemode;
 	const std::string configDelim = "PICOSCREW";
 	const std::string deviceKey;
+
+signals:
+	void currentPosition(unsigned id, int pos);
 
 private:
 	PicoScrewFlume screw;

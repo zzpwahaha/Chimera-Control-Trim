@@ -100,6 +100,10 @@ void PicoScrewSystem::initialize()
 	}
 	layout->addLayout(layout2);
 
+	connect(&core, &PicoScrewCore::currentPosition, this, [this](unsigned id, int position) {
+		currentVals[id]->setText(qstr(position));
+		});
+
 	QTimer* timer = new QTimer(this);
 	connect(timer, &QTimer::timeout, [this]() {
 		try {
@@ -110,7 +114,7 @@ void PicoScrewSystem::initialize()
 		catch (ChimeraError&) {}
 		});
 	// could probably make this time a front panel option.
-	timer->start(10000);
+	timer->start(5000);
 }
 
 void PicoScrewSystem::handleOpenConfig(ConfigStream& configFile)

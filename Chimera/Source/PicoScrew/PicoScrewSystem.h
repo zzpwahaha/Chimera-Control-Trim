@@ -11,6 +11,7 @@ class IChimeraQtWindow;
 
 class PicoScrewSystem : public IChimeraSystem
 {
+	Q_OBJECT
 public:
 	// THIS CLASS IS NOT COPYABLE.
 	PicoScrewSystem& operator=(const PicoScrewSystem&) = delete;
