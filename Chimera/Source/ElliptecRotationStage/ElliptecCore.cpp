@@ -108,6 +108,9 @@ double ElliptecCore::getElliptecPosition(unsigned channel)
 	if (channel >= size_t(ElliptecGrid::total)) {
 		thrower("Channel of Elliptec out of range in getElliptecCommand as " + str(channel));
 	}
+	if (safemode) {
+		return 0.0;
+	}
 	auto readBack = ellFlume.queryWithCheck(str(channel) + "gp");
 	int angleInt = static_cast<int32_t>(std::stoul(readBack.substr(3, 8), nullptr, 16));
 	return angleInt * elliptecResolutionInst;

@@ -3,7 +3,7 @@
 
 enum class ElliptecGrid : size_t
 {
-	numPERunit = 2,
+	numPERunit = 4,
 	numOFunit = 1,
 	total = numPERunit * numOFunit
 };
