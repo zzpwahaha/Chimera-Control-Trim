@@ -13,12 +13,14 @@ ElliptecFlume::ElliptecFlume(std::string portAddress, bool safemode)
 std::string ElliptecFlume::query(std::string msg)
 {
 	write(msg);
+	Sleep(1);
 	return read();
 }
 
 std::string ElliptecFlume::queryWithCheck(std::string msg)
 {
 	write(msg);
+	Sleep(1);
 	return readWithCheck();
 }
 
@@ -80,16 +82,16 @@ std::string ElliptecFlume::read()
 	}
 	std::string recv;
 	/*read register after write*/
-	for (auto idx : range(1500)) {
+	for (auto idx : range(200)) {
 		if (readComplete) {
 			recv = std::string(readRegister.cbegin(), readRegister.cend());
 			break;
 		}
-		Sleep(1);
+		Sleep(10);
 	}
 	/*check reading error and reading result and if reading is complete*/
 	if (recv.empty() || !readComplete) {
-		thrower("Reading is empty and timed out for 1500ms in reading from Elliptec serial port " + str(boostFlume.portID) + ".");
+		thrower("Reading is empty and timed out for 2000ms in reading from Elliptec serial port " + str(boostFlume.portID) + ".");
 	}
 	if (!errorMsg.empty()) {
 		thrower("Nothing feeded back from Elliptec, something might be wrong with it." + recv + "\r\nError message: " + errorMsg);

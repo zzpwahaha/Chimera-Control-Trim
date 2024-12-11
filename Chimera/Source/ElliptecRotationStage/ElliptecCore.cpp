@@ -4,6 +4,8 @@
 #include <ConfigurationSystems/ConfigSystem.h>
 #include <DataLogging/DataLogger.h>
 #include <boost/format.hpp>
+#include <qelapsedtimer.h>
+#include <qdebug.h>
 
 ElliptecCore::ElliptecCore(bool safemode, const std::string& port) :
 	safemode(safemode),
@@ -58,9 +60,12 @@ void ElliptecCore::programVariation(unsigned variation, std::vector<parameterTyp
 	}
 	std::array<double, size_t(ElliptecGrid::total)> outputs;
 	for (auto ch : range(size_t(ElliptecGrid::total))) {
-		outputs[ch] = expSettings.elliptecs[ch].getValue(variation);
+		if (expSettings.elliptecs[ch].varies() || variation == 0) {
+			outputs[ch] = expSettings.elliptecs[ch].getValue(variation);
+			writeElliptec(ch, outputs[ch]);
+		}
 	}
-	writeElliptecs(outputs);
+	//writeElliptecs(outputs);
 }
 
 ElliptecSettings ElliptecCore::getSettingsFromConfig(ConfigStream& file)
@@ -111,7 +116,27 @@ double ElliptecCore::getElliptecPosition(unsigned channel)
 	if (safemode) {
 		return 0.0;
 	}
-	auto readBack = ellFlume.queryWithCheck(str(channel) + "gp");
+	std::string readBack;
+
+	unsigned maxRetries = 3;
+	for (int attempt = 0; attempt < maxRetries; ++attempt) {
+		try {
+			readBack = ellFlume.queryWithCheck(str(channel) + "gp");
+			break;
+		}
+		catch (ChimeraError& err) {
+			if (err.whatBare().find("Reading is empty and timed out") != std::string::npos) {
+				if (attempt == maxRetries - 1) {
+					qDebug() << "ElliptecCore::getElliptecPosition: Max retries reached, operation failed!";
+					throwNested("Rethrow after trying " + str(maxRetries) + " times for ElliptecCore::getElliptecPosition");
+				}
+				else {
+					qDebug() << "ElliptecCore::getElliptecPosition: Failed due to time out: \"" + qstr(err.whatBare()) + "\" , retrying...";
+				}
+			}
+		}
+	}
+	
 	int angleInt = static_cast<int32_t>(std::stoul(readBack.substr(3, 8), nullptr, 16));
 	return angleInt * elliptecResolutionInst;
 }
@@ -135,17 +160,30 @@ std::string ElliptecCore::getElliptecCommand(unsigned channel, double angle)
 
 void ElliptecCore::writeElliptecs(std::array<double, size_t(ElliptecGrid::total)> outputs)
 {
-	std::string command;
 	for (auto ch : range(size_t(ElliptecGrid::total))) {
-		command = getElliptecCommand(ch, outputs[ch]);
-		ellFlume.write(command);
-		if (!safemode) {
-			std::string recv = ellFlume.readWithCheck();
-			int angleInt = static_cast<int32_t>(std::stoul(recv.substr(3, 8), nullptr, 16));
-			double angle = angleInt * elliptecResolutionInst;
-			emit currentAngle(ch, angle);
-		}
+		writeElliptec(ch, outputs[ch]);
+		Sleep(10);
 	}
+}
+
+void ElliptecCore::writeElliptec(unsigned channel, double angle)
+{
+	QElapsedTimer timerE;
+	timerE.start();
+	qDebug() << " Before write" << timerE.elapsed();
+	auto command = getElliptecCommand(channel, angle);
+	Sleep(5);
+	ellFlume.write(command);
+	qDebug() << " After write" << timerE.elapsed();
+	if (!safemode) {
+		std::string recv = ellFlume.readWithCheck();
+		qDebug() << " After read" << timerE.elapsed();
+		int angleInt = static_cast<int32_t>(std::stoul(recv.substr(3, 8), nullptr, 16));
+		double angle = angleInt * elliptecResolutionInst;
+		emit currentAngle(channel, angle);
+		qDebug() << " After emit" << timerE.elapsed();
+	}
+
 }
 
 bool ElliptecCore::checkBound(double angle)

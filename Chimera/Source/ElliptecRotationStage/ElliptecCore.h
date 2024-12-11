@@ -41,6 +41,7 @@ private:
     double normalizeToRange(double angle, double min, double max);
     std::string getElliptecCommand(unsigned channel, double angle);
     void writeElliptecs(std::array<double, size_t(ElliptecGrid::total)> outputs);
+    void writeElliptec(unsigned channel, double angle);
     bool checkBound(double angle);
 
 public:

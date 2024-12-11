@@ -86,7 +86,7 @@ void ElliptecSystem::initialize()
 		catch (ChimeraError&) {}
 		});
 	// could probably make this time a front panel option.
-	timer->start(5000);
+	timer->start(10000);
 
 }
 
