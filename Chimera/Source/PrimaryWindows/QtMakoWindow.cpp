@@ -44,12 +44,23 @@ void QtMakoWindow::windowOpenConfig(ConfigStream& configFile)
 	for (auto& camera : cam) {
 		MakoSettings settings;
 		ConfigSystem::stdGetFromConfig(configFile, camera.getMakoCore(), settings, Version("1.0"));
-		try {
-			camera.getMakoCore().getMakoCtrl().setSettings(settings);
-			camera.updateStatusBar();
-		}
-		catch(ChimeraError& e) {
-			errBox("Error in open config for MAKO window\n" + str(e.trace()));
+		int maxRetries = 3;
+		// Loop to retry the operation up to 3 times
+		for (int i = 0; i < maxRetries; ++i) {
+			try {
+				camera.getMakoCore().getMakoCtrl().setSettings(settings);
+				camera.updateStatusBar();
+				break; // If it succeeds, exit the loop
+			}
+			catch (ChimeraError& e) {
+				if (i == maxRetries - 1) {
+					qDebug() << "QtMakoWindow::windowOpenConfig: Max retries reached, operation failed!";
+					errBox("Error in open config for MAKO window\n" + str(e.trace()));
+				}
+				else {
+					qDebug() << "QtMakoWindow::windowOpenConfig: catched error but decided to retry: " + e.qtrace();
+				}
+			}
 		}
 	}
 }

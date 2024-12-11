@@ -140,7 +140,7 @@
 
 	//Elliptec rotation stage
 	const bool ELLIPTEC_SAFEMODE = false;
-	const std::string ELLIPTEC_PORT = "COM3";
+	const std::string ELLIPTEC_PORT = "COM14";
 
 	//Temperature Monitor
 	const bool TEMPMON_SAFEMODE = false;
