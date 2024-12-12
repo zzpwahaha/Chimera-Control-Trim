@@ -166,9 +166,11 @@ def move_beam_to_target(exp: ExperimentProcedure, mako_idx: int, pico_idx: tuple
     return False
 
 
-RYDBERG_BEAM_420_POSITION = (16.21,28.80) #(15.75,27.46) #(16.12,28.30) #(14.81,28.74) #(16.48,28.57) #(16.95,28.71)
-RYDBERG_BEAM_1013_POSITION = (32.31, 26.02) #(31.88, 27.06) #(31.31,26.33) #(31.89,26.19) #(32.02,25.56) #(33.65,26.38)
+RYDBERG_BEAM_420_POSITION = (13.60, 28.60) #(13.10, 29.50) #(13.3, 27.5) #(16.21,28.80) #(15.75,27.46) #(16.12,28.30) #(14.81,28.74) #(16.48,28.57) #(16.95,28.71)
+RYDBERG_BEAM_1013_POSITION = (33.90,26.40) #(33.02, 27.0) #(32.68, 26.60) #(32.31, 26.02) #(31.88, 27.06) #(31.31,26.33) #(31.89,26.19) #(32.02,25.56) #(33.65,26.38)
 
+
+# RYDBERG_BEAM_420_POSITION = (68.65,67.7)
 if __name__=="__main__":
     exp = ExperimentProcedure()
     # move_beam_to_target(exp, mako_idx=3, pico_idx=(1,2), target_position=(74,68.7), tolerance=0.3,max_iterations=50, gain=(-8, 8))

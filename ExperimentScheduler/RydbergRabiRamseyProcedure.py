@@ -103,12 +103,12 @@ def rabi_scan(exp_idx, timeout_control = {'use':False, 'timeout':600}):
         ScanRange(index=1,left_inclusive=True, right_inclusive=True, variations=11),
         ScanRange(index=2,left_inclusive=True, right_inclusive=True, variations=11)
         ])
-    config_file.config_param.update_variable("time_scan_us", scan_type="Variable", 
-                                             new_initial_values=[0.01,2.6,4.5], 
-                                             new_final_values=[0.65,3.0,4.9])
     # config_file.config_param.update_variable("time_scan_us", scan_type="Variable", 
-    #                                          new_initial_values=[0.01,1.7,3.6], 
-    #                                          new_final_values=[0.49,2.0,3.9])
+    #                                          new_initial_values=[0.01,2.6,4.5], 
+    #                                          new_final_values=[0.65,3.0,4.9])
+    config_file.config_param.update_variable("time_scan_us", scan_type="Variable", 
+                                             new_initial_values=[0.01,1.7,3.6], 
+                                             new_final_values=[0.49,2.0,3.9])
 
 
     config_file.save()

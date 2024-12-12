@@ -32,7 +32,12 @@ t += 5
 on: UVLampTrg
 
 call setQuantizationField()
-t += t_field_settling %750
+
+dacramp: TweezerIntensity twz_intensity twz_intensity*0.1 10
+t += 10
+t += t_field_settling-20 %750
+dacramp: TweezerIntensity twz_intensity*0.1 twz_intensity 10
+t += 10
 
 call OpticalPumping22()
 
@@ -102,6 +107,7 @@ t += 0.25/1000 %0.00025
 on: TweezerTrg
 t += 0.001
 off: TweezerHold
+off: Ryd1013Trg
 
 %t += -0.002
 %on: TweezerHold
@@ -113,7 +119,7 @@ off: TweezerHold
 %t += 0.002
 
 t += -0.08
-dacramp: TweezerIntensity twz_intensity*0.1 twz_intensity 10 %0.06
+dacramp: TweezerIntensity twz_intensity*0.1 twz_intensity 10
 t += 10+0.08
 
 %pulseon: MWAmpTrg 0.1

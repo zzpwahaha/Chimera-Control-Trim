@@ -84,15 +84,15 @@ def _move_EOM_resonance(start_freq, end_freq, step = 0.1):
     config_file.reopen()
 
 def high_to_low_direction(exp_idx):
-    EOM_center_freqs = np.linspace(586, 486, 11)
-    previous_f = 586
+    EOM_center_freqs = np.linspace(225, 255, 4)
+    previous_f = 225
     for idx, eom_f in enumerate(EOM_center_freqs):
-        _move_EOM_resonance(previous_f, eom_f, step=-0.1)
+        _move_EOM_resonance(previous_f, eom_f, step=0.1)
         previous_f = eom_f
         _calibration()
         sleep(1)
         try:
-            resonace_scan(exp_idx=exp_idx, exp_name_prefix=f"RABI-SCAN-EOM{eom_f}-DESCEND")
+            resonace_scan(exp_idx=exp_idx, exp_name_prefix=f"RESONANCE-SCAN-EOM{eom_f}-DESCEND")
         except:
             sleep(10)
             exp.hardware_controller.restart_zynq_control()
@@ -100,15 +100,15 @@ def high_to_low_direction(exp_idx):
         exp.hardware_controller.restart_zynq_control()
 
 def low_to_high_direction(exp_idx):
-    EOM_center_freqs = np.linspace(486, 586, 11)
-    previous_f = 486
+    EOM_center_freqs = np.linspace(255, 205, 6)
+    previous_f = 255
     for idx, eom_f in enumerate(EOM_center_freqs):
-        _move_EOM_resonance(previous_f, eom_f, step=0.1)
+        _move_EOM_resonance(previous_f, eom_f, step=-0.1)
         previous_f = eom_f
         _calibration()
         sleep(1)
         try:
-            resonace_scan(exp_idx=exp_idx, exp_name_prefix=f"RABI-SCAN-EOM{eom_f}-ASCEND")
+            resonace_scan(exp_idx=exp_idx, exp_name_prefix=f"RESONANCE-SCAN-EOM{eom_f}-ASCEND")
         except:
             sleep(10)
             exp.hardware_controller.restart_zynq_control()
@@ -117,16 +117,17 @@ def low_to_high_direction(exp_idx):
 
 
 def efield_tracing_procedure():
-    for idx in np.arange(10):
-        if idx<=0: continue
-        print(f"Running experiment sets number {idx}")
+    for idx in np.arange(1):
+        # if idx<=0: continue
+        # print(f"Running experiment sets number {idx}")
         # if idx != 0:
         #     exp.hardware_controller.restart_zynq_control()
-        high_to_low_direction(idx)
-        low_to_high_direction(idx)
+        high_to_low_direction(1)
+        # low_to_high_direction(idx)
 
 
 if __name__=='__main__':
-    # efield_tracing_procedure()
+    efield_tracing_procedure()
     # _raw_move_EOM_resonance(exp, start_freq=581,end_freq=586,step=0.1)
-    _raw_move_EOM_resonance(exp, start_freq=224,end_freq=228,step=0.1)
+    # _raw_move_EOM_resonance(exp, start_freq=205,end_freq=225,step=0.25)
+    # _raw_move_EOM_resonance(exp, start_freq=324,end_freq=224,step=-0.5)

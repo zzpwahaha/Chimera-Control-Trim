@@ -43,21 +43,21 @@ on: OPShutter
 ol: ol_cooling d2_cooling_resonance-resonance_scan
 ol: ol_repump d2_repump_resonance+(300) % this doesn't matter since TARep is off
 dac: OPAmp {0.1 op_pwr}
-dac: Ryd420Amp 0.125 %0.34
+dac: Ryd420Amp 0.09 %0.34
 t += 15
 %%%%%%%%%%% turn on 420 light %%%%%%%%%%%%%
 dacramp: TweezerIntensity twz_intensity twz_intensity*0.1 10
 t += 10
 
-t += -5
+t += -10
 on: Ryd420Trg
-t += 1
+t += 6
 on: Ryd420Hold
 t += 0.1
 off: Ryd420Trg
 t += 0.1
 on: Ryd420ExpShutter
-t += 5-1-0.1-0.1
+t += 10-6-0.1-0.1
 
 %pulseon: Ryd420MAKO 0.1
 t += 0.1

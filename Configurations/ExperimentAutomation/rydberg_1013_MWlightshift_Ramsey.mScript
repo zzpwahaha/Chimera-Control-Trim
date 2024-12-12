@@ -32,15 +32,15 @@ t += t_field_settling
 call OpticalPumping22()
 t += 1
 
-
 on: Ryd420Shutter
 off: Ryd420ExpShutter
 on: Ryd1013Shutter
-dac: Ryd1013Amp 0.0 %0.01 %0.05 %0.34
-t += 5
+dac: Ryd1013Amp 0.65 %0.01 %0.05 %0.34
+t += 15
 
 %%%%%%%%%%%%%%% MW %%%%%%%%%%%
-var mw_rabi_pi2 0.0447 %0.041 %0.041 %0.01 %0.0599 %0.0296
+var mw_rabi_pi 0.12
+var mw_rabi_pi2 0.065 %0.041 %0.041 %0.01 %0.0599 %0.0296
 var IQ_MAX_AMP 2.5
 
 
@@ -50,23 +50,66 @@ dac: MW_IQ_Q 0
 dacramp: TweezerIntensity twz_intensity twz_intensity*0.1 10
 t += 10
 
-dac: Ryd1013Amp amplitude_scan  %0.1
+t += -10
 on: Ryd1013Trg
-t += 1
+t += 6
+on: Ryd1013Hold
+t += 0.1
+off: Ryd1013Trg
+t += 0.1
+t += 10-6-0.1-0.1
+
+%on: Ryd1013Trg
+%t += 1
 
 % 2,2 ->1,1,  7.24MHz - 20241030 cold
 pulseon: MWTrg 0.4
 t += 1
-on: DO8_4
-pulseon: MWAmpTrg time_scan %0.105 %0.0398 %time_scan %0.0836
-t += time_scan+0.1 %0.0398+0.010 %time_scan %0.041+0.1 
-off: DO8_4
 
-t += 1
+%on: DO8_4
+%pulseon: MWAmpTrg time_scan %0.105 %0.0398 %time_scan %0.0836
+%t += time_scan+0.1 %0.0398+0.010 %time_scan %0.041+0.1 
+%off: DO8_4
+%t += 1
+%off: Ryd1013Trg
+
+%on: do8_4
+%repeat: 6 % scan to get pi2 time
+%on: MWAmpTrg
+%t += time_scan 
+%off: MWAmpTrg
+%t += 2/1000
+%end
+%off: do8_4 %dummy trigger for picoscope
+
+%on: do8_4
+%repeat: 5 % scan to get pi time
+%on: MWAmpTrg
+%t += time_scan % scan from 70 to 100 ns
+%off: MWAmpTrg
+%t += 2/1000
+%end
+%off: do8_4
+
+on: do8_4
+on: MWAmpTrg
+t += mw_rabi_pi2
+off: MWAmpTrg
+
+on: Ryd1013Trg
+t += time_scan
 off: Ryd1013Trg
 
-%pulseon: MWTrg 0.4
-%t += 1
+on: MWAmpTrg
+t += mw_rabi_pi
+off: MWAmpTrg
+
+t += time_scan
+
+on: MWAmpTrg
+t += mw_rabi_pi2
+off: MWAmpTrg
+off: do8_4
 
 %t += 0.1
 %on: Ryd1013Trg
